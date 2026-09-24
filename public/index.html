@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <title>CareBridge LIFF - ระบบยืม-คืนอุปกรณ์ทางการแพทย์ รพ.สต.</title>
+  
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#006948",
+            "primary-container": "#00855d",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#f5fff7",
+            "secondary": "#006e2b",
+            "secondary-container": "#5efd83",
+            "tertiary": "#006194",
+            "surface": "#f8f9ff",
+            "surface-low": "#eff4ff",
+            "surface-container": "#e6eeff",
+            "surface-container-high": "#dce9ff",
+            "surface-container-highest": "#d5e3fc",
+            "on-surface": "#0d1c2e",
+            "on-surface-variant": "#3d4a42",
+            "outline": "#6d7a72",
+            "outline-variant": "#bccac0",
+            "mint-bg": "#F0FDF4",
+            "status-available": "#059669",
+            "status-borrowed": "#0284C7",
+            "status-pending": "#D97706",
+            "status-overdue": "#DC2626",
+            "status-maintenance": "#64748B",
+            "badge-available-bg": "#DCFCE7",
+            "badge-borrowed-bg": "#E0F2FE",
+            "badge-pending-bg": "#FEF3C7",
+            "badge-overdue-bg": "#FEE2E2",
+            "badge-maintenance-bg": "#F1F5F9"
+          },
+          fontFamily: {
+            sans: ['"Prompt"', '"Sarabun"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #f1f5f9;
+      font-family: 'Prompt', 'Sarabun', 'Plus Jakarta Sans', sans-serif;
+      overscroll-behavior: none;
+    }
+    .mobile-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background-color: #f8f9ff;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .touch-target {
+      min-height: 48px;
+    }
+  </style>
+</head>
+<body class="text-on-surface antialiased">
+
+<div class="mobile-shell">
+
+  <!-- ============================================================ -->
+  <!-- TOP BAR & PERSONA SWITCHER                                  -->
+  <!-- ============================================================ -->
+  <div class="bg-slate-900 text-white text-xs px-3 py-1.5 flex items-center justify-between z-50">
+    <div class="flex items-center gap-1.5">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-medium">LIFF Mode:</span>
+      <select id="personaSelector" onchange="switchPersona(this.value)" class="bg-slate-800 text-emerald-300 font-semibold px-2 py-0.5 rounded border border-slate-700 outline-none text-xs">
+        <option value="3">นายสมชาย ใจดี [ผู้ป่วย]</option>
+        <option value="4">นางมาลี รักสงบ [ผู้ป่วย / Overdue]</option>
+        <option value="2">นางสาวสมศรี มีสุข [พยาบาล/จนท.]</option>
+        <option value="1">นายอภิสิทธิ์ ใจแก้ว [Admin/จนท.]</option>
+      </select>
+    </div>
+    <button onclick="simulateLinePush()" title="ทดสอบ Push Message ตาม rules.md" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded flex items-center gap-1 text-[11px] transition-colors">
+      <span class="material-symbols-outlined text-[13px]">notifications_active</span>
+      <span>Test Push</span>
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- HEADER                                                       -->
+  <!-- ============================================================ -->
+  <header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-slate-200/80 px-4 h-14 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm shadow">
+        CB
+      </div>
+      <div class="flex flex-col">
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-primary text-sm leading-tight">รพ.สต.</span>
+          <span class="text-[10px] bg-badge-available-bg text-status-available font-semibold px-1.5 py-0.2 rounded-full">ยืม-คืนกายอุปกรณ์</span>
+        </div>
+        <span class="text-[11px] text-on-surface-variant leading-tight" id="headerTitle">CareBridge LIFF</span>
+      </div>
+    </div>
+
+    <!-- Active User Badge -->
+    <div class="flex items-center gap-2">
+      <div class="flex flex-col text-right">
+        <span class="text-xs font-semibold text-on-surface truncate max-w-[110px]" id="currentUserName">กำลังโหลด...</span>
+        <span class="text-[10px] text-emerald-700 uppercase tracking-wider font-semibold" id="currentUserRole">PATIENT</span>
+      </div>
+      <img id="currentUserAvatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/50" alt="Avatar"/>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- MAIN CONTENT VIEWS                                           -->
+  <!-- ============================================================ -->
+  <main class="flex-1 pb-24 overflow-y-auto">
+
+    <!-- ---------------------------------------------------------- -->
+    <!-- VIEW 1: CATALOG                                            -->
+    <!-- ---------------------------------------------------------- -->
+    <section id="view-catalog" class="p-4 space-y-4">
+      <!-- Welcome Hero Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-container to-primary p-4 text-white shadow-md">
+        <div class="relative z-10 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-xs backdrop-blur-sm">
+              <span class="material-symbols-outlined text-[14px]">local_hospital</span>
+              <span>รพ.สต. บ้านดอนพัฒนา</span>
+            </div>
+            <span class="text-[11px] bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-ping"></span>
+              ระบบออนไลน์
+            </span>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold">คลังกายอุปกรณ์ชุมชน</h1>
+            <p class="text-xs text-white/80">บริการยืม-คืนฟรี สำหรับผู้ป่วยและผู้ดูแลในพื้นที่ รพ.สต.</p>
+          </div>
+          <!-- Quick Stat Counters -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div class="bg-white/10 rounded-xl p-2 flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[16px]">check_circle</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-white/75 block leading-none">พร้อมให้ยืม</span>
+                <span class="text-sm font-bold text-white leading-tight" id="heroAvailableCount">3 รายการ</span>
+              </div>
+            </div>
+            <div class="bg-white/10 rounded-xl p-2 flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[16px]">schedule</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-white/75 block leading-none">อยู่ระหว่างยืม</span>
+                <span class="text-sm font-bold text-white leading-tight" id="heroBorrowedCount">2 รายการ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Category Filters -->
+      <div class="space-y-2 sticky top-14 bg-surface/95 backdrop-blur-md pt-1 pb-2 z-20">
+        <div class="relative flex items-center gap-2">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+            <input type="text" id="searchInput" oninput="debounceFilter()" placeholder="ค้นหาชื่ออุปกรณ์, รหัสครุภัณฑ์..." class="w-full h-11 pl-9 pr-8 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm"/>
+            <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-2.5 top-3 text-slate-400 hover:text-slate-600">
+              <span class="material-symbols-outlined text-[16px]">close</span>
+            </button>
+          </div>
+          <button onclick="navTo('staff')" class="h-11 w-11 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-primary shadow-sm active:scale-95 transition-transform" title="สแกน QR อุปกรณ์">
+            <span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+          </button>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex gap-1.5 overflow-x-auto pb-1 text-xs whitespace-nowrap" id="categoryTabs">
+          <button onclick="selectCategory('all')" class="cat-pill active px-3.5 py-1.5 rounded-full bg-primary text-white font-medium shadow-sm transition-all" data-cat="all">ทั้งหมด</button>
+          <button onclick="selectCategory('รถเข็น')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-cat="รถเข็น">รถเข็น</button>
+          <button onclick="selectCategory('เครื่องมือแพทย์')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-cat="เครื่องมือแพทย์">เครื่องมือแพทย์</button>
+          <button onclick="selectCategory('เตียงและฟูก')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-cat="เตียงและฟูก">เตียงและฟูก</button>
+          <button onclick="selectCategory('กายอุปกรณ์')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-600 border border-slate-200 font-medium hover:bg-slate-50 transition-all" data-cat="กายอุปกรณ์">กายอุปกรณ์</button>
+        </div>
+      </div>
+
+      <!-- Equipment List Container -->
+      <div id="equipmentList" class="space-y-3">
+        <!-- Injected via JS -->
+        <div class="text-center py-8 text-slate-400 text-sm">กำลังโหลดรายการอุปกรณ์...</div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------- -->
+    <!-- VIEW 2: BORROW REQUEST FORM                                -->
+    <!-- ---------------------------------------------------------- -->
+    <section id="view-borrow" class="p-4 space-y-4 hidden">
+      <!-- Spotlight Card for Selected Equipment -->
+      <div id="selectedEquipmentCard" class="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex items-center gap-3">
+        <img id="formEquipImg" src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200" class="w-20 h-20 rounded-xl object-cover bg-slate-100 flex-shrink-0" alt="Equipment"/>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-2 py-0.5 rounded-full bg-badge-available-bg text-status-available text-[11px] font-semibold" id="formEquipStatus">
+              พร้อมยืม
+            </span>
+            <span class="text-xs font-mono text-slate-500 font-semibold" id="formEquipCode">EQ-WC-002</span>
+          </div>
+          <h2 class="font-bold text-sm text-slate-900 truncate" id="formEquipName">รถเข็นผู้ป่วย พับได้ (Wheelchair)</h2>
+          <p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+            <span class="material-symbols-outlined text-[14px] text-primary">location_on</span>
+            <span>รพ.สต. บ้านดอน (คงเหลือพร้อมยืม)</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="bg-mint-bg rounded-xl p-3 flex items-center justify-between text-xs text-slate-600">
+        <div class="flex items-center gap-1.5 font-bold text-primary">
+          <span class="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center text-[11px]">1</span>
+          <span>กรอกข้อมูลคำขอ</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
+        <div class="flex items-center gap-1.5 text-slate-400">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[11px]">2</span>
+          <span>จนท. ตรวจสอบ</span>
+        </div>
+        <span class="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
+        <div class="flex items-center gap-1.5 text-slate-400">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[11px]">3</span>
+          <span>รับอุปกรณ์</span>
+        </div>
+      </div>
+
+      <!-- Request Form -->
+      <form id="loanRequestForm" onsubmit="submitBorrowRequest(event)" class="space-y-4">
+        <input type="hidden" id="formEquipId" value="2"/>
+
+        <!-- Section 1: ผู้ขอยืม (LINE Profile Connected) -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
+              <span class="material-symbols-outlined text-primary text-[18px]">person_pin</span>
+              <span>1. ข้อมูลผู้ขอยืม (ผู้ป่วย / ผู้ดูแล)</span>
+            </div>
+            <span class="text-[10px] bg-badge-available-bg text-emerald-700 font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span class="material-symbols-outlined text-[12px]">verified</span>
+              LINE Verified
+            </span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">เลขประจำตัวประชาชน 13 หลัก (PDPA Protected) *</label>
+              <input type="text" id="formNationalId" required class="w-full h-11 px-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-mono text-sm focus:bg-white focus:outline-none focus:border-primary" placeholder="3-5001-XXXXX-XX-X"/>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">ชื่อ-นามสกุล ผู้ป่วย / ผู้ขอรับบริการ *</label>
+              <input type="text" id="formFullName" required class="w-full h-11 px-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:bg-white focus:outline-none focus:border-primary" placeholder="ระบุชื่อจริงและนามสกุล"/>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">เบอร์โทรศัพท์ติดต่อสะดวก *</label>
+              <input type="tel" id="formPhone" required class="w-full h-11 px-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm focus:bg-white focus:outline-none focus:border-primary" placeholder="08X-XXX-XXXX"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: กำหนดการยืม -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm pb-2 border-b border-slate-100">
+            <span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+            <span>2. กำหนดวันยืมและส่งคืน</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">วันที่เริ่มยืม</label>
+              <input type="date" id="formBorrowDate" required class="w-full h-11 px-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:bg-white focus:outline-none focus:border-primary"/>
+            </div>
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">วันที่ส่งคืน (คาดการณ์) *</label>
+              <input type="date" id="formDueDate" required class="w-full h-11 px-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:bg-white focus:outline-none focus:border-primary"/>
+            </div>
+          </div>
+
+          <!-- Quick Preset Buttons -->
+          <div class="flex items-center gap-1.5 pt-1">
+            <span class="text-[11px] text-slate-500 font-medium">เพิ่มระยะเวลา:</span>
+            <button type="button" onclick="setDuePreset(15)" class="text-[11px] px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium">+15 วัน</button>
+            <button type="button" onclick="setDuePreset(30)" class="text-[11px] px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">+30 วัน</button>
+            <button type="button" onclick="setDuePreset(60)" class="text-[11px] px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium">+60 วัน</button>
+          </div>
+
+          <div class="text-xs">
+            <label class="font-semibold text-slate-700 block mb-1">เหตุผลความจำเป็นในการยืม</label>
+            <textarea id="formRemarks" rows="2" class="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs focus:bg-white focus:outline-none focus:border-primary" placeholder="เช่น ผู้ป่วยพักฟื้นหลังผ่าตัดสะโพก ต้องใช้รถเข็นในการเดินทางไป รพ."></textarea>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button type="submit" class="touch-target w-full rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 active:scale-[0.99] transition-all">
+            <span class="material-symbols-outlined text-[20px]">send</span>
+            <span>ยืนยันยื่นคำขอยืมอุปกรณ์</span>
+          </button>
+          <p class="text-[11px] text-center text-slate-400 mt-2">คำขอจะได้รับการตรวจสอบโดยเจ้าหน้าที่ รพ.สต. ภายใน 24 ชม.</p>
+        </div>
+      </form>
+    </section>
+
+    <!-- ---------------------------------------------------------- -->
+    <!-- VIEW 3: MY LOANS                                           -->
+    <!-- ---------------------------------------------------------- -->
+    <section id="view-myloans" class="p-4 space-y-4 hidden">
+      <!-- Profile Header Summary -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-base shadow-sm">
+            <span id="loanUserInitials">สช</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h2 class="font-bold text-sm text-slate-900" id="loanUserName">นายสมชาย ใจดี</h2>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-1.5 py-0.2 rounded">ผู้ยืม</span>
+            </div>
+            <p class="text-xs text-slate-500" id="loanUserContact">086-111-2223 • ต.ในเมือง</p>
+          </div>
+        </div>
+        <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+          บัญชีปกติ
+        </span>
+      </div>
+
+      <!-- Tab Switcher (Active vs History) -->
+      <div class="bg-slate-200/80 p-1 rounded-xl flex text-xs font-semibold">
+        <button onclick="switchLoanTab('active')" id="btnLoanTabActive" class="flex-1 py-2 rounded-lg bg-white text-primary shadow-sm flex items-center justify-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[16px]">timelapse</span>
+          <span>กำลังยืมอยู่ (Active)</span>
+          <span class="ml-1 px-1.5 py-0.2 rounded-full bg-primary text-white text-[10px]" id="activeLoanBadgeCount">0</span>
+        </button>
+        <button onclick="switchLoanTab('history')" id="btnLoanTabHistory" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[16px]">history</span>
+          <span>ประวัติย้อนหลัง</span>
+        </button>
+      </div>
+
+      <!-- Active Loans Container -->
+      <div id="activeLoansContainer" class="space-y-3">
+        <div class="text-center py-6 text-slate-400 text-sm">กำลังโหลดรายการยืม...</div>
+      </div>
+
+      <!-- History Loans Container -->
+      <div id="historyLoansContainer" class="space-y-3 hidden">
+        <div class="text-center py-6 text-slate-400 text-sm">กำลังโหลดประวัติ...</div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------- -->
+    <!-- VIEW 4: STAFF PORTAL                                       -->
+    <!-- ---------------------------------------------------------- -->
+    <section id="view-staff" class="p-4 space-y-4 hidden">
+      <!-- Staff Duty Card -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-base ring-2 ring-emerald-400">
+            อส
+          </div>
+          <div>
+            <h2 class="font-bold text-sm text-slate-900" id="staffNameDisplay">นายอภิสิทธิ์ ใจแก้ว</h2>
+            <p class="text-xs text-slate-500">เจ้าหน้าที่บริการ รพ.สต. บ้านดอน</p>
+          </div>
+        </div>
+        <span class="text-[11px] bg-emerald-100 text-emerald-800 font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          กำลังปฏิบัติหน้าที่
+        </span>
+      </div>
+
+      <!-- 4 Quick Stats Grid -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>รออนุมัติ</span>
+            <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[15px]">pending_actions</span>
+            </span>
+          </div>
+          <div class="flex items-baseline gap-1 mt-2">
+            <span class="text-2xl font-bold text-amber-600" id="statPending">0</span>
+            <span class="text-xs text-slate-500">รายการ</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>กำลังยืม</span>
+            <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[15px]">outbox</span>
+            </span>
+          </div>
+          <div class="flex items-baseline gap-1 mt-2">
+            <span class="text-2xl font-bold text-emerald-700" id="statBorrowed">0</span>
+            <span class="text-xs text-slate-500">ชิ้น</span>
+          </div>
+        </div>
+
+        <div class="bg-red-50 rounded-xl p-3 border border-red-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-red-700 font-semibold">
+            <span>เกินกำหนด (ด่วน)</span>
+            <span class="w-6 h-6 rounded-full bg-red-100 text-red-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[15px]">warning</span>
+            </span>
+          </div>
+          <div class="flex items-baseline gap-1 mt-2">
+            <span class="text-2xl font-bold text-red-600" id="statOverdue">0</span>
+            <span class="text-xs text-red-600">ชิ้น</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>พร้อมใช้งาน</span>
+            <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[15px]">inventory_2</span>
+            </span>
+          </div>
+          <div class="flex items-baseline gap-1 mt-2">
+            <span class="text-2xl font-bold text-sky-700" id="statAvailable">0</span>
+            <span class="text-xs text-slate-500">ชิ้น</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QR Scanner Section -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
+            <span class="material-symbols-outlined text-primary text-[20px]">qr_code_scanner</span>
+            <span>สแกน QR Code อุปกรณ์</span>
+          </div>
+          <span class="text-[11px] text-slate-500">จ่ายของ / รับคืนทันที</span>
+        </div>
+
+        <!-- Scanner Viewfinder Simulation -->
+        <div class="relative w-full h-40 rounded-xl overflow-hidden bg-slate-900 flex flex-col items-center justify-center">
+          <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=600');"></div>
+          
+          <!-- Animated Laser Beam -->
+          <div class="w-48 h-0.5 bg-emerald-400 shadow-[0_0_12px_#34d399] animate-bounce mb-3"></div>
+
+          <!-- Center Box -->
+          <div class="w-36 h-28 border-2 border-emerald-400/80 rounded-lg flex flex-col items-center justify-center relative bg-slate-900/40 backdrop-blur-[1px]">
+            <span class="material-symbols-outlined text-emerald-400 text-[28px] opacity-75">qr_code_2</span>
+            <span class="text-[10px] text-emerald-200 mt-1">วาง QR Code ในกรอบ</span>
+          </div>
+        </div>
+
+        <!-- Quick Scan Preset Codes -->
+        <div class="space-y-1.5">
+          <div class="text-[11px] font-semibold text-slate-600">ตัวอย่างสแกนรหัสครุภัณฑ์หน้างาน:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="scanAssetCode('EQ-WC-001')" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-200 font-mono font-semibold transition-all">
+              EQ-WC-001 (รถเข็น - ยืมอยู่)
+            </button>
+            <button onclick="scanAssetCode('EQ-WC-002')" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-200 font-mono font-semibold transition-all">
+              EQ-WC-002 (รถเข็น - ว่าง)
+            </button>
+            <button onclick="scanAssetCode('EQ-O2-001')" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-700 hover:border-red-300 border border-slate-200 font-mono font-semibold transition-all">
+              EQ-O2-001 (เครื่องผลิต O2 - Overdue)
+            </button>
+          </div>
+        </div>
+
+        <!-- Manual Code Input -->
+        <div class="flex items-center gap-2 pt-1">
+          <input type="text" id="manualAssetCodeInput" placeholder="หรือพิมพ์รหัส เช่น EQ-ST-001" class="flex-1 h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono focus:bg-white focus:outline-none focus:border-primary"/>
+          <button onclick="scanAssetCode(document.getElementById('manualAssetCodeInput').value)" class="h-10 px-3.5 rounded-xl bg-primary text-white text-xs font-bold shadow-sm active:scale-95 transition-transform">
+            ค้นหา
+          </button>
+        </div>
+      </div>
+
+      <!-- Pending Requests Approval Section -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
+            <span class="material-symbols-outlined text-amber-600 text-[20px]">assignment_turned_in</span>
+            <span>คำขอยืมรอดำเนินการ (Pending)</span>
+          </div>
+          <span class="text-[11px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full" id="pendingSectionCount">0 รายการ</span>
+        </div>
+        <div id="pendingRequestsContainer" class="space-y-3">
+          <div class="text-center py-4 text-slate-400 text-xs">ไม่มีคำขอค้างอยู่</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- SCAN RESULT MODAL (POPUP)                                    -->
+  <!-- ============================================================ -->
+  <div id="scanModal" class="fixed inset-0 bg-black/60 z-50 flex items-end justify-center hidden">
+    <div class="w-full max-w-[480px] bg-white rounded-t-3xl p-5 space-y-4 animate-in slide-in-from-bottom duration-200">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[24px]">qr_code_2</span>
+          <h3 class="font-bold text-slate-900 text-base">ผลการสแกนอุปกรณ์</h3>
+        </div>
+        <button onclick="closeScanModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Scanned Item Info -->
+      <div id="scanModalBody" class="space-y-3">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TOAST NOTIFICATION MESSAGE                                   -->
+  <!-- ============================================================ -->
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 max-w-[90%] bg-slate-900 text-white text-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-2">
+    <span class="material-symbols-outlined text-emerald-400 text-[18px]" id="toastIcon">check_circle</span>
+    <span id="toastMsg">ข้อความสำเร็จ</span>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- BOTTOM NAVIGATION TABS                                       -->
+  <!-- ============================================================ -->
+  <nav class="fixed bottom-0 w-full max-w-[480px] z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 py-1.5 flex items-center justify-around shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+    <!-- Tab 1: Catalog -->
+    <button onclick="navTo('catalog')" id="navBtn-catalog" class="flex-1 flex flex-col items-center py-1 text-primary transition-colors">
+      <span class="material-symbols-outlined text-[22px]">medical_services</span>
+      <span class="text-[10px] font-semibold mt-0.5">คลังอุปกรณ์</span>
+    </button>
+
+    <!-- Tab 2: Borrow Form -->
+    <button onclick="navTo('borrow')" id="navBtn-borrow" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
+      <span class="material-symbols-outlined text-[22px]">edit_note</span>
+      <span class="text-[10px] font-semibold mt-0.5">ยื่นคำขอยืม</span>
+    </button>
+
+    <!-- Tab 3: My Loans -->
+    <button onclick="navTo('myloans')" id="navBtn-myloans" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-700 transition-colors relative">
+      <span class="material-symbols-outlined text-[22px]">assignment</span>
+      <span class="text-[10px] font-semibold mt-0.5">รายการของฉัน</span>
+      <span id="navMyLoansDot" class="hidden absolute top-1 right-5 w-2 h-2 rounded-full bg-red-500"></span>
+    </button>
+
+    <!-- Tab 4: Staff Portal -->
+    <button onclick="navTo('staff')" id="navBtn-staff" class="flex-1 flex flex-col items-center py-1 text-slate-400 hover:text-slate-700 transition-colors">
+      <span class="material-symbols-outlined text-[22px]">health_and_safety</span>
+      <span class="text-[10px] font-semibold mt-0.5">จนท. รพ.สต.</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT APP LOGIC                                         -->
+<!-- ============================================================ -->
+<script>
+  // State
+  let currentTab = 'catalog';
+  let currentUser = null;
+  let allEquipment = [];
+  let currentCategory = 'all';
+  let selectedEquipmentForLoan = null;
+  let activeLoanTab = 'active';
+
+  // Initialization
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Set default borrow dates
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('formBorrowDate').value = today;
+    setDuePreset(30);
+
+    // Initial Load
+    await loadCurrentUser();
+    await loadEquipment();
+    await loadDashboardStats();
+    await loadMyLoans();
+  });
+
+  // --- Navigation Router ---
+  function navTo(tab) {
+    currentTab = tab;
+    ['catalog', 'borrow', 'myloans', 'staff'].forEach(t => {
+      const view = document.getElementById(`view-${t}`);
+      const btn = document.getElementById(`navBtn-${t}`);
+      if (t === tab) {
+        view.classList.remove('hidden');
+        btn.classList.add('text-primary');
+        btn.classList.remove('text-slate-400');
+      } else {
+        view.classList.add('hidden');
+        btn.classList.remove('text-primary');
+        btn.classList.add('text-slate-400');
+      }
+    });
+
+    const titles = {
+      catalog: 'คลังอุปกรณ์ทางการแพทย์',
+      borrow: 'แบบฟอร์มยื่นขอยืมอุปกรณ์',
+      myloans: 'ประวัติและรายการยืมของฉัน',
+      staff: 'พอร์ทัลสแกนและจัดการ รพ.สต.'
+    };
+    document.getElementById('headerTitle').textContent = titles[tab] || 'CareBridge LIFF';
+
+    if (tab === 'myloans') loadMyLoans();
+    if (tab === 'staff') {
+      loadDashboardStats();
+      loadPendingRequests();
+    }
+  }
+
+  // --- User Persona Switcher ---
+  async function loadCurrentUser() {
+    try {
+      const res = await fetch('/api/auth/me');
+      const data = await res.json();
+      if (data.success) {
+        currentUser = data.data;
+        document.getElementById('currentUserName').textContent = currentUser.full_name;
+        document.getElementById('currentUserRole').textContent = currentUser.role.toUpperCase();
+        document.getElementById('currentUserAvatar').src = currentUser.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100';
+
+        // Update form prefill
+        document.getElementById('formFullName').value = currentUser.full_name;
+        document.getElementById('formPhone').value = currentUser.phone_number;
+        document.getElementById('formNationalId').value = currentUser.national_id || '';
+
+        // Update selector dropdown value
+        document.getElementById('personaSelector').value = currentUser.user_id;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function switchPersona(userId) {
+    try {
+      const res = await fetch('/api/auth/switch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message);
+        await loadCurrentUser();
+        await loadMyLoans();
+        await loadDashboardStats();
+      }
+    } catch (e) {
+      showToast('ไม่สามารถสลับผู้ใช้งานได้', 'error');
+    }
+  }
+
+  // --- Catalog & Equipment Logic ---
+  async function loadEquipment() {
+    try {
+      const res = await fetch('/api/equipment');
+      const data = await res.json();
+      if (data.success) {
+        allEquipment = data.data;
+        renderEquipmentList();
+        updateHeroCounters();
+      }
+    } catch (e) {
+      document.getElementById('equipmentList').innerHTML = `<div class="text-center py-6 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>`;
+    }
+  }
+
+  function updateHeroCounters() {
+    const avail = allEquipment.filter(e => e.status === 'available').length;
+    const borrowed = allEquipment.filter(e => e.status === 'borrowed').length;
+    document.getElementById('heroAvailableCount').textContent = `${avail} รายการ`;
+    document.getElementById('heroBorrowedCount').textContent = `${borrowed} รายการ`;
+  }
+
+  function selectCategory(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.cat-pill').forEach(btn => {
+      if (btn.dataset.cat === cat) {
+        btn.classList.add('bg-primary', 'text-white');
+        btn.classList.remove('bg-white', 'text-slate-600');
+      } else {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-600');
+      }
+    });
+    renderEquipmentList();
+  }
+
+  let filterTimeout;
+  function debounceFilter() {
+    clearTimeout(filterTimeout);
+    filterTimeout = setTimeout(() => {
+      const val = document.getElementById('searchInput').value.trim();
+      document.getElementById('clearSearchBtn').classList.toggle('hidden', val.length === 0);
+      renderEquipmentList();
+    }, 200);
+  }
+
+  function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').classList.add('hidden');
+    renderEquipmentList();
+  }
+
+  function renderEquipmentList() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const container = document.getElementById('equipmentList');
+
+    const filtered = allEquipment.filter(item => {
+      const matchCat = currentCategory === 'all' || item.category === currentCategory;
+      const matchSearch = !q || 
+        item.equipment_name.toLowerCase().includes(q) || 
+        item.asset_code.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-400 space-y-2">
+          <span class="material-symbols-outlined text-[36px] text-slate-300">search_off</span>
+          <p class="text-sm">ไม่พบอุปกรณ์ที่ตรงกับเงื่อนไขการค้นหา</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(item => {
+      const isAvail = item.status === 'available';
+      const statusBadges = {
+        available: { text: 'พร้อมยืม', bg: 'bg-badge-available-bg', color: 'text-status-available', dot: 'bg-emerald-500' },
+        borrowed: { text: 'อยู่ระหว่างยืม', bg: 'bg-badge-borrowed-bg', color: 'text-status-borrowed', dot: 'bg-sky-500' },
+        maintenance: { text: 'ซ่อมบำรุง', bg: 'bg-badge-maintenance-bg', color: 'text-status-maintenance', dot: 'bg-slate-400' },
+        overdue: { text: 'เกินกำหนด', bg: 'bg-badge-overdue-bg', color: 'text-status-overdue', dot: 'bg-red-500' }
+      };
+      const badge = statusBadges[item.status] || statusBadges.maintenance;
+
+      return `
+        <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col gap-2.5 transition-all hover:border-slate-300">
+          <div class="flex gap-3">
+            <div class="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+              <img src="${item.image_url}" alt="${item.equipment_name}" class="w-full h-full object-cover"/>
+              <span class="absolute bottom-1 left-1 px-1 py-0.2 rounded bg-black/60 text-white font-mono text-[9px]">${item.asset_code.split('-')[1]}</span>
+            </div>
+
+            <div class="flex-1 min-w-0 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <span class="px-2 py-0.5 rounded-full ${badge.bg} ${badge.color} text-[10px] font-semibold inline-flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full ${badge.dot}"></span>
+                    ${badge.text}
+                  </span>
+                  <span class="text-[11px] font-mono text-slate-400 font-semibold">${item.asset_code}</span>
+                </div>
+                <h3 class="font-bold text-sm text-slate-800 line-clamp-1">${item.equipment_name}</h3>
+                <p class="text-xs text-slate-500 line-clamp-1 mt-0.5">${item.condition_detail || 'สภาพดี พร้อมใช้งาน'}</p>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                <span class="text-[11px]">${item.category}</span>
+                <span class="text-[11px] text-emerald-700 font-medium">รพ.สต. บ้านดอน</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action -->
+          <div class="pt-1 border-t border-slate-100 flex items-center justify-between">
+            <button onclick="scanAssetCode('${item.asset_code}')" class="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-[16px]">info</span>
+              <span>ดูข้อมูลครุภัณฑ์</span>
+            </button>
+            ${isAvail ? `
+              <button onclick="startBorrowEquipment(${item.equipment_id})" class="px-4 py-1.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-sm flex items-center gap-1 active:scale-95 transition-transform">
+                <span class="material-symbols-outlined text-[16px]">add_circle</span>
+                <span>ยืมอุปกรณ์นี้</span>
+              </button>
+            ` : `
+              <span class="text-xs text-slate-400 italic">งดให้บริการชั่วคราว</span>
+            `}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // --- Borrow Request Form Logic ---
+  function startBorrowEquipment(equipmentId) {
+    const item = allEquipment.find(e => e.equipment_id === equipmentId);
+    if (!item) return;
+
+    selectedEquipmentForLoan = item;
+    document.getElementById('formEquipId').value = item.equipment_id;
+    document.getElementById('formEquipImg').src = item.image_url;
+    document.getElementById('formEquipName').textContent = item.equipment_name;
+    document.getElementById('formEquipCode').textContent = item.asset_code;
+    document.getElementById('formEquipStatus').textContent = item.status === 'available' ? 'พร้อมยืม' : item.status;
+
+    navTo('borrow');
+  }
+
+  function setDuePreset(days) {
+    const baseDate = new Date(document.getElementById('formBorrowDate').value || new Date());
+    baseDate.setDate(baseDate.getDate() + days);
+    document.getElementById('formDueDate').value = baseDate.toISOString().split('T')[0];
+  }
+
+  async function submitBorrowRequest(e) {
+    e.preventDefault();
+    const equipmentId = document.getElementById('formEquipId').value;
+    const borrowDate = document.getElementById('formBorrowDate').value;
+    const dueDate = document.getElementById('formDueDate').value;
+    const remarks = document.getElementById('formRemarks').value;
+    const fullName = document.getElementById('formFullName').value;
+    const phone = document.getElementById('formPhone').value;
+
+    try {
+      const res = await fetch('/api/borrow/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          equipment_id: equipmentId,
+          borrow_date: borrowDate,
+          due_date: dueDate,
+          remarks: remarks,
+          full_name: fullName,
+          phone_number: phone
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        showToast('ยื่นคำขอยืมเรียบร้อยแล้ว!', 'success');
+        await loadEquipment();
+        await loadMyLoans();
+        navTo('myloans');
+      } else {
+        showToast(data.error || 'เกิดข้อผิดพลาดในการยื่นคำขอ', 'error');
+      }
+    } catch (err) {
+      showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+    }
+  }
+
+  // --- My Loans Logic ---
+  function switchLoanTab(tab) {
+    activeLoanTab = tab;
+    if (tab === 'active') {
+      document.getElementById('btnLoanTabActive').classList.add('bg-white', 'text-primary', 'shadow-sm');
+      document.getElementById('btnLoanTabActive').classList.remove('text-slate-600');
+      document.getElementById('btnLoanTabHistory').classList.remove('bg-white', 'text-primary', 'shadow-sm');
+      document.getElementById('btnLoanTabHistory').classList.add('text-slate-600');
+      document.getElementById('activeLoansContainer').classList.remove('hidden');
+      document.getElementById('historyLoansContainer').classList.add('hidden');
+    } else {
+      document.getElementById('btnLoanTabHistory').classList.add('bg-white', 'text-primary', 'shadow-sm');
+      document.getElementById('btnLoanTabHistory').classList.remove('text-slate-600');
+      document.getElementById('btnLoanTabActive').classList.remove('bg-white', 'text-primary', 'shadow-sm');
+      document.getElementById('btnLoanTabActive').classList.add('text-slate-600');
+      document.getElementById('historyLoansContainer').classList.remove('hidden');
+      document.getElementById('activeLoansContainer').classList.add('hidden');
+    }
+  }
+
+  async function loadMyLoans() {
+    try {
+      const res = await fetch('/api/borrow/my-loans');
+      const data = await res.json();
+      if (!data.success) return;
+
+      const { active, history } = data.data;
+
+      // Update badge counts
+      document.getElementById('activeLoanBadgeCount').textContent = active.length;
+      document.getElementById('navMyLoansDot').classList.toggle('hidden', active.length === 0);
+
+      // Render Active Loans
+      const activeContainer = document.getElementById('activeLoansContainer');
+      if (active.length === 0) {
+        activeContainer.innerHTML = `
+          <div class="text-center py-10 bg-white rounded-2xl border border-slate-200 text-slate-400 space-y-2">
+            <span class="material-symbols-outlined text-[36px] text-slate-300">check_circle</span>
+            <p class="text-sm">ไม่มีรายการอุปกรณ์ที่กำลังยืมอยู่</p>
+            <button onclick="navTo('catalog')" class="text-xs text-primary font-semibold underline">ดูคลังอุปกรณ์เพื่อยืม</button>
+          </div>
+        `;
+      } else {
+        activeContainer.innerHTML = active.map(record => {
+          const isOverdue = record.status === 'overdue';
+          const isPending = record.status === 'pending';
+          
+          return `
+            <div class="bg-white rounded-2xl p-4 border ${isOverdue ? 'border-red-300 bg-red-50/30' : 'border-slate-200'} shadow-sm space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-3 min-w-0">
+                  <img src="${record.equipment?.image_url || 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=100'}" class="w-14 h-14 rounded-xl object-cover bg-slate-100 flex-shrink-0" alt="item"/>
+                  <div class="min-w-0">
+                    <span class="text-[10px] font-mono font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">${record.equipment?.asset_code}</span>
+                    <h3 class="font-bold text-sm text-slate-900 truncate mt-0.5">${record.equipment?.equipment_name}</h3>
+                    <span class="text-xs text-slate-500">${record.equipment?.category}</span>
+                  </div>
+                </div>
+
+                ${isOverdue ? `
+                  <span class="px-2.5 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold whitespace-nowrap">
+                    ⚠️ เกินกำหนด
+                  </span>
+                ` : isPending ? `
+                  <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold whitespace-nowrap">
+                    รออนุมัติ
+                  </span>
+                ` : `
+                  <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold whitespace-nowrap">
+                    กำลังใช้งาน
+                  </span>
+                `}
+              </div>
+
+              <!-- Period Box -->
+              <div class="bg-slate-50 rounded-xl p-2.5 text-xs space-y-1.5 border border-slate-100">
+                <div class="flex items-center justify-between text-slate-600">
+                  <span>วันที่เริ่มยืม: <b>${record.borrow_date}</b></span>
+                  <span>ครบกำหนด: <b class="${isOverdue ? 'text-red-600 font-bold' : 'text-slate-800'}">${record.due_date}</b></span>
+                </div>
+                <!-- Progress bar simulation -->
+                <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                  <div class="h-full rounded-full ${isOverdue ? 'bg-red-500 w-full' : 'bg-primary w-3/4'}"></div>
+                </div>
+              </div>
+
+              <!-- LINE alert notice -->
+              <div class="flex items-center gap-1.5 text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-1.5 rounded-lg">
+                <span class="material-symbols-outlined text-[16px] text-emerald-600">chat_bubble</span>
+                <span>ระบบจะส่งข้อความแจ้งเตือนผ่าน LINE OA ล่วงหน้า 3 วัน</span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-2 pt-1">
+                <button onclick="scanAssetCode('${record.equipment?.asset_code}')" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-[16px]">qr_code</span>
+                  <span>แสดง QR เพื่อส่งคืน</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render History Loans
+      const historyContainer = document.getElementById('historyLoansContainer');
+      if (history.length === 0) {
+        historyContainer.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">ยังไม่มีประวัติการส่งคืน</div>`;
+      } else {
+        historyContainer.innerHTML = history.map(record => `
+          <div class="bg-white rounded-2xl p-3.5 border border-slate-200 text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[10px] text-slate-400">${record.equipment?.asset_code}</span>
+              <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-semibold">ส่งคืนแล้ว (${record.return_date || '-'})</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-sm">${record.equipment?.equipment_name}</h4>
+            <p class="text-slate-500 text-[11px]">${record.remarks || 'สภาพสมบูรณ์'}</p>
+          </div>
+        `).join('');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // --- Staff Portal Logic ---
+  async function loadDashboardStats() {
+    try {
+      const res = await fetch('/api/stats');
+      const data = await res.json();
+      if (data.success) {
+        const stats = data.data;
+        document.getElementById('statPending').textContent = stats.pendingRequests;
+        document.getElementById('statBorrowed').textContent = stats.borrowedEquipment;
+        document.getElementById('statOverdue').textContent = stats.overdueRecords;
+        document.getElementById('statAvailable').textContent = stats.availableEquipment;
+        document.getElementById('pendingSectionCount').textContent = `${stats.pendingRequests} รายการ`;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function loadPendingRequests() {
+    try {
+      const res = await fetch('/api/borrow/records?status=pending');
+      const data = await res.json();
+      const container = document.getElementById('pendingRequestsContainer');
+
+      if (!data.success || data.data.length === 0) {
+        container.innerHTML = `<div class="text-center py-4 text-slate-400 text-xs">ไม่มีคำขอยืมที่รออนุมัติในขณะนี้</div>`;
+        return;
+      }
+
+      container.innerHTML = data.data.map(req => `
+        <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2 text-xs">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="font-mono text-[10px] text-slate-500">${req.equipment?.asset_code}</span>
+              <h4 class="font-bold text-slate-800 text-sm">${req.equipment?.equipment_name}</h4>
+              <p class="text-slate-600 mt-0.5">ผู้ขอ: <b>${req.user?.full_name}</b> (โทร: ${req.user?.phone_number})</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">รออนุมัติ</span>
+          </div>
+
+          <div class="bg-white p-2 rounded-lg text-[11px] text-slate-600">
+            <div>ช่วงเวลายืม: ${req.borrow_date} ถึง ${req.due_date}</div>
+            <div class="text-slate-500 italic mt-0.5">"${req.remarks || 'ไม่มีหมายเหตุ'}"</div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="approveRequest(${req.record_id})" class="flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-sm">
+              <span class="material-symbols-outlined text-[16px]">check</span>
+              <span>อนุมัติคำขอ</span>
+            </button>
+            <button onclick="rejectRequest(${req.record_id})" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 font-semibold text-xs">
+              ปฏิเสธ
+            </button>
+          </div>
+        </div>
+      `).join('');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function approveRequest(recordId) {
+    try {
+      const res = await fetch(`/api/borrow/${recordId}/approve`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+        await loadDashboardStats();
+        await loadPendingRequests();
+        await loadEquipment();
+      } else {
+        showToast(data.error, 'error');
+      }
+    } catch (e) {
+      showToast('เกิดข้อผิดพลาดในการอนุมัติ', 'error');
+    }
+  }
+
+  async function rejectRequest(recordId) {
+    const reason = prompt('ระบุเหตุผลในการปฏิเสธคำขอ:');
+    if (reason === null) return;
+
+    try {
+      const res = await fetch(`/api/borrow/${recordId}/reject`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remarks: reason })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+        await loadDashboardStats();
+        await loadPendingRequests();
+        await loadEquipment();
+      } else {
+        showToast(data.error, 'error');
+      }
+    } catch (e) {
+      showToast('เกิดข้อผิดพลาด', 'error');
+    }
+  }
+
+  // --- QR Scanner & Modal ---
+  async function scanAssetCode(assetCode) {
+    if (!assetCode) return;
+    try {
+      const res = await fetch(`/api/borrow/scan/${encodeURIComponent(assetCode.trim())}`);
+      const data = await res.json();
+      if (!data.success) {
+        showToast(data.error || 'ไม่พบอุปกรณ์นี้', 'error');
+        return;
+      }
+
+      const { equipment, currentBorrow } = data.data;
+      const modalBody = document.getElementById('scanModalBody');
+
+      modalBody.innerHTML = `
+        <div class="flex items-center gap-3">
+          <img src="${equipment.image_url}" class="w-16 h-16 rounded-xl object-cover bg-slate-100 flex-shrink-0"/>
+          <div>
+            <span class="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${equipment.asset_code}</span>
+            <h4 class="font-bold text-slate-900 text-sm mt-0.5">${equipment.equipment_name}</h4>
+            <span class="text-xs text-slate-500">${equipment.category} • สถานะ: <b class="text-emerald-700">${equipment.status}</b></span>
+          </div>
+        </div>
+
+        ${currentBorrow ? `
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 text-xs space-y-1">
+            <div class="font-bold text-slate-800">ข้อมูลการยืมปัจจุบัน:</div>
+            <div>ผู้ยืม: <b>${currentBorrow.user?.full_name || 'ผู้รับบริการ'}</b> (โทร: ${currentBorrow.user?.phone_number || '-'})</div>
+            <div>วันยืม: ${currentBorrow.borrow_date} | ครบกำหนด: <b class="${currentBorrow.status === 'overdue' ? 'text-red-600' : 'text-slate-800'}">${currentBorrow.due_date}</b></div>
+            <div>สถานะ: <span class="font-bold uppercase">${currentBorrow.status}</span></div>
+          </div>
+
+          <div class="pt-2">
+            <button onclick="returnScannedItem(${currentBorrow.record_id})" class="touch-target w-full rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[20px]">assignment_return</span>
+              <span>บันทึกการส่งคืนอุปกรณ์เข้าคลังทันที</span>
+            </button>
+          </div>
+        ` : `
+          <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 text-xs text-emerald-800">
+            อุปกรณ์นี้อยู่ในคลัง พร้อมให้ประชาชนยืมได้ทันที
+          </div>
+          <button onclick="closeScanModal(); startBorrowEquipment(${equipment.equipment_id})" class="touch-target w-full rounded-xl bg-primary text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <span>ทำรายการยืมอุปกรณ์นี้</span>
+          </button>
+        `}
+      `;
+
+      document.getElementById('scanModal').classList.remove('hidden');
+    } catch (e) {
+      showToast('ไม่สามารถค้นหาข้อมูลอุปกรณ์ได้', 'error');
+    }
+  }
+
+  function closeScanModal() {
+    document.getElementById('scanModal').classList.add('hidden');
+  }
+
+  async function returnScannedItem(recordId) {
+    try {
+      const res = await fetch(`/api/borrow/${recordId}/return`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remarks: 'ตรวจรับคืนผ่านการสแกน QR Code หน้างาน สภาพสมบูรณ์' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+        closeScanModal();
+        await loadDashboardStats();
+        await loadEquipment();
+        await loadMyLoans();
+      } else {
+        showToast(data.error, 'error');
+      }
+    } catch (e) {
+      showToast('เกิดข้อผิดพลาดในการบันทึกรับคืน', 'error');
+    }
+  }
+
+  // --- LINE Push Simulation ---
+  async function simulateLinePush() {
+    try {
+      const res = await fetch('/api/notifications/simulate-due-reminder', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        const note = data.isWithinStandardWindow ? 'อยู่ในเวลาทำการ (08:00 - 17:00 น.)' : 'นอกเวลาทำการ (ทดสอบ)';
+        alert(`[LINE Push Simulation]\nผลการทดสอบ: ${data.note}\nจำนวนการแจ้งเตือนที่จัดส่ง: ${data.dispatchedCount} ข้อความ\n\nตัวอย่างข้อความ:\n${data.notifications[0]?.message || 'ไม่มีรายการค้างส่ง'}`);
+      }
+    } catch (e) {
+      showToast('ไม่สามารถจำลองการส่ง LINE Notification ได้', 'error');
+    }
+  }
+
+  // --- Toast Helper ---
+  function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = document.getElementById('toastIcon');
+    const msgEl = document.getElementById('toastMsg');
+
+    msgEl.textContent = msg;
+    if (type === 'error') {
+      icon.textContent = 'error';
+      icon.className = 'material-symbols-outlined text-red-400 text-[18px]';
+    } else {
+      icon.textContent = 'check_circle';
+      icon.className = 'material-symbols-outlined text-emerald-400 text-[18px]';
+    }
+
+    toast.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+    setTimeout(() => {
+      toast.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+    }, 3200);
+  }
+</script>
+
+</body>
+</html>

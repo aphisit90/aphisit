@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="th"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-container": "#f5fff7", "on-tertiary-fixed-variant": "#004b73", "status-borrowed": "#0284C7", "badge-maintenance-bg": "#F1F5F9", "status-available": "#059669", "tertiary-fixed-dim": "#93ccff", "badge-overdue-bg": "#FEE2E2", "on-error": "#ffffff", "surface-dim": "#ccdbf3", "outline-variant": "#bccac0", "surface-container-highest": "#d5e3fc", "tertiary-container": "#007bb9", "inverse-on-surface": "#eaf1ff", "on-secondary": "#ffffff", "mint-bg": "#F0FDF4", "on-background": "#0d1c2e", "primary-fixed-dim": "#68dba9", "secondary-container": "#5efd83", "on-surface-variant": "#3d4a42", "primary-container": "#00855d", "on-secondary-container": "#00722d", "on-secondary-fixed-variant": "#00531f", "on-primary-fixed": "#002114", "badge-pending-bg": "#FEF3C7", "status-overdue": "#DC2626", "on-tertiary": "#ffffff", "surface-variant": "#d5e3fc", "surface-tint": "#006c4a", "outline": "#6d7a72", "surface-container-lowest": "#ffffff", "surface-bright": "#f8f9ff", "on-tertiary-fixed": "#001d31", "inverse-surface": "#233144", "status-maintenance": "#64748B", "on-secondary-fixed": "#002108", "secondary-fixed-dim": "#3ee26c", "surface-container-low": "#eff4ff", "primary-fixed": "#85f8c4", "primary": "#006948", "surface": "#f8f9ff", "badge-borrowed-bg": "#E0F2FE", "on-error-container": "#93000a", "tertiary-fixed": "#cce5ff", "surface-subtle": "#F8FAFC", "error": "#ba1a1a", "badge-available-bg": "#DCFCE7", "on-surface": "#0d1c2e", "on-primary": "#ffffff", "surface-container": "#e6eeff", "secondary-fixed": "#69ff89", "error-container": "#ffdad6", "on-tertiary-container": "#fdfcff", "status-pending": "#D97706", "tertiary": "#006194", "inverse-primary": "#68dba9", "on-primary-fixed-variant": "#005137", "surface-container-high": "#dce9ff", "background": "#f8f9ff", "secondary": "#006e2b" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-2xl": "2rem", "space-xl": "1.5rem", "screen-gutter": "1rem", "space-3xl": "2.5rem", "space-sm": "0.75rem", "space-xs": "0.5rem", "bottom-nav-height": "4.25rem", "space-md": "1rem", "space-lg": "1.25rem", "card-padding": "1rem", "space-2xs": "0.25rem", "touch-target-min": "3rem" }, fontFamily: { "headline-lg": ["plusJakartaSans"], "body-md": ["plusJakartaSans"], "label-lg": ["plusJakartaSans"], "body-lg": ["plusJakartaSans"], "label-md": ["plusJakartaSans"], "headline-md": ["plusJakartaSans"], "body-sm": ["plusJakartaSans"], "label-sm": ["plusJakartaSans"], "headline-sm": ["plusJakartaSans"], "headline-xl": ["plusJakartaSans"] }, fontSize: { "headline-lg": ["22px", { "lineHeight": "30px", "fontWeight": "700" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "600" }], "headline-md": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "16px", "fontWeight": "700" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-xl": ["28px", { "lineHeight": "36px", "fontWeight": "700" }] } } } }</script></head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-screen-gutter flex items-center justify-between"><div class="flex items-center gap-space-xs"><img alt="รพ.สต. ยืม-คืนกายอุปกรณ์ Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AOf_eGf_R2d8MfqV3W93pZt7W9Y5qC6d_Q2e7l3h4_1h=s120"/><div class="flex flex-col"><div class="flex items-center gap-space-2xs"><span class="font-label-lg text-label-lg text-primary leading-none">รพ.สต.</span><span class="px-space-2xs py-0.5 rounded-full bg-badge-available-bg text-status-available font-label-sm text-label-sm leading-none">ยืม-คืนกายอุปกรณ์</span></div><span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Borrow Request</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="แชร์" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">share</span></button><button aria-label="ปิด" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">close</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ml-space-2xs" src="https://lh3.googleusercontent.com/aida/AOf_eGf7W_s5T2fQ3H4l8m2G9c_E7a1p0X_qZ4v6B2w=s120"/></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface"><div class="flex flex-col w-full px-screen-gutter pb-space-3xl gap-space-lg">
+<!-- Selected Equipment Spotlight Card -->
+<div class="bg-surface-container-lowest rounded-xl p-card-padding shadow-sm flex items-center gap-space-md">
+<div class="relative w-20 h-20 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="High quality studio shot of a foldable medical wheelchair with lightweight aluminum frame, dark padded seat, ergonomic handles, clean neutral background, medical equipment photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzsgUGBa_Fgy9pApqjcW9M0UlApohcZCShY2jwUrm_zcQoRdYRMJ8IrMPQpUtqGY9ehw_Mzq9PDKWiJyjpKUyoBHZlrBSQ4QQDN292f4MZeeFx1cuyBS6R83HHMadXQAZu4Ti7914_ahYW1PWMEX8MC4qMTPEN9KfGURbQpZLSR_Skb_b6siz59wHnKrzjU7LygoCxBXqxCqlgzqQgZrSeXi2ij64VAEa2t5bfrY1Aos4hEnxoNu5a"/>
+<span class="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-primary text-on-primary font-label-sm text-label-sm">WC</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-2xs mb-1">
+<span class="px-space-xs py-0.5 rounded-full bg-badge-available-bg text-status-available font-label-sm text-label-sm inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available animate-pulse"></span>
+          พร้อมยืม
+        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">EQ-WC-002</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">รถเข็นผู้ป่วย พับได้ (Wheelchair)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+        รพ.สต. บ้านค้อกลาง (คงเหลือ 2 คัน)
+      </p>
+</div>
+</div>
+<!-- Form Workflow Flow Indicator -->
+<div class="bg-mint-bg rounded-xl p-space-sm flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">1</div>
+<span class="font-label-md text-label-md text-primary">กรอกข้อมูลคำขอ</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-outline-variant">chevron_right</span>
+<div class="flex items-center gap-2 opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md text-label-md">2</div>
+<span class="font-label-md text-label-md">จนท. ตรวจสอบ</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-outline-variant">chevron_right</span>
+<div class="flex items-center gap-2 opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md text-label-md">3</div>
+<span class="font-label-md text-label-md">รับอุปกรณ์</span>
+</div>
+</div>
+<form class="flex flex-col gap-space-lg" id="borrowForm" onsubmit="event.preventDefault();">
+<!-- Section 1: ข้อมูลผู้ขอยืม (LINE Profile Connected) -->
+<section class="bg-surface-container-lowest rounded-xl p-card-padding shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">person_pin</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">1. ข้อมูลผู้ขอยืม</h3>
+</div>
+<span class="font-label-sm text-label-sm text-primary bg-badge-available-bg px-2.5 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+          เชื่อมต่อบัญชี LINE แล้ว
+        </span>
+</div>
+<!-- LINE Identity Card -->
+<div class="flex items-center gap-3 p-space-sm rounded-lg bg-surface-container-low">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Warm friendly avatar portrait of a Thai adult user in gentle lighting, smiling naturally, wearing everyday casual clothing, subtle soft green backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7o5g4hpG_5-PdMVCRltN4wolF7Os5ih1NeTzmSAyL8if_rJ30RmX3SQ59Uk5aqq7doELwkQ8zkDQPWF_Ak6FaeyUv2vYCuquRB4cRirFBG3T81pWmdNm-HwJQ9vMzOUyungO0v1YBgy1NQjThUXcW_WGpili4BiA42YBpB0vGmWDTtdzutkfFncslB7Fjgzk3aczFmVovU7ax2JOoxUGw0eAHC--PVVWS4bm3x56cfWVQuVDNtI1Y"/>
+<span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[11px] shadow-sm">
+<span class="material-symbols-outlined text-[13px]">chat</span>
+</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">สมชาย มะลิวัลย์ (LINE: Somchai M.)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">รหัสผู้ใช้: U48a902df10c49</span>
+</div>
+</div>
+<!-- Citizen ID Field -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="citizenId">
+<span>เลขประจำตัวประชาชน 13 หลัก <span class="text-error">*</span></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ผู้ป่วย หรือ ผู้ดูแล</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">badge</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md shadow-inner focus:outline-none focus:bg-surface-container-lowest transition-colors" id="citizenId" inputmode="numeric" maxlength="17" name="citizenId" placeholder="1-3099-00124-55-1" type="text" value="1-3099-00124-55-1"/>
+</div>
+</div>
+<!-- Full Name -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="fullName">
+          ชื่อ-นามสกุล ผู้ป่วย / ผู้ขอรับบริการ <span class="text-error">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">person</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md shadow-inner focus:outline-none focus:bg-surface-container-lowest transition-colors" id="fullName" name="fullName" placeholder="ระบุชื่อจริง และนามสกุล" type="text" value="นายสมชาย มะลิวัลย์"/>
+</div>
+</div>
+<!-- Phone Number -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="phone">
+          เบอร์โทรศัพท์ที่ติดต่อได้สะดวก <span class="text-error">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">call</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md shadow-inner focus:outline-none focus:bg-surface-container-lowest transition-colors" id="phone" inputmode="numeric" maxlength="12" name="phone" placeholder="081-234-5678" type="tel" value="089-456-7890"/>
+</div>
+</div>
+<!-- Address Grid -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="address">
+          ที่อยู่สำหรับนำอุปกรณ์ไปใช้งาน <span class="text-error">*</span>
+</label>
+<div class="relative flex items-start">
+<span class="material-symbols-outlined absolute left-3 top-3 text-outline text-[20px]">home_pin</span>
+<textarea class="w-full p-3 pl-10 rounded-lg bg-surface text-on-surface font-body-md text-body-md shadow-inner focus:outline-none focus:bg-surface-container-lowest transition-colors resize-none" id="address" name="address" placeholder="บ้านเลขที่, หมู่บ้าน/ชุมชน, ซอย, ถนน" rows="2">142 หมู่ 4 บ้านค้อกลาง ตำบลบ้านค้อ อำเภอเมือง</textarea>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div class="bg-surface-container-low px-3 py-2 rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">รพ.สต. ที่รับผิดชอบ</span>
+<span class="font-label-md text-label-md text-primary">รพ.สต. บ้านค้อกลาง</span>
+</div>
+<div class="bg-surface-container-low px-3 py-2 rounded-lg flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">อสม. ประจำคุ้ม</span>
+<span class="font-label-md text-label-md text-on-surface truncate">ป้าสมร เข็มกลัด</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: รายละเอียดการยืม -->
+<section class="bg-surface-container-lowest rounded-xl p-card-padding shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center gap-2 pb-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">calendar_month</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">2. กำหนดเวลาและวัตถุประสงค์</h3>
+</div>
+<!-- Loan Period Cards (Datepicker Pickers UI) -->
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Start Date -->
+<button class="flex flex-col text-left p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors relative" type="button">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">event</span>
+            วันที่รับอุปกรณ์
+          </span>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-1">25 ก.ย. 69</span>
+<span class="font-body-sm text-body-sm text-status-available mt-0.5">เวลาราชการ 09:00</span>
+<span class="material-symbols-outlined absolute top-3 right-3 text-[16px] text-outline">edit_calendar</span>
+</button>
+<!-- Return Date -->
+<button class="flex flex-col text-left p-space-sm rounded-xl bg-badge-borrowed-bg hover:bg-surface-container transition-colors relative" type="button">
+<span class="font-label-sm text-label-sm text-status-borrowed flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">event_repeat</span>
+            กำหนดส่งคืน
+          </span>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-1">25 ต.ค. 69</span>
+<span class="font-body-sm text-body-sm text-status-borrowed mt-0.5">รวม 30 วัน</span>
+<span class="material-symbols-outlined absolute top-3 right-3 text-[16px] text-status-borrowed">schedule</span>
+</button>
+</div>
+<!-- Recommendation Notice -->
+<div class="flex items-start gap-2 p-2.5 rounded-lg bg-mint-bg text-on-surface">
+<span class="material-symbols-outlined text-status-available text-[20px] flex-shrink-0 mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          ระยะเวลายืมเริ่มต้นกำหนดไว้ <strong class="text-primary font-label-md">30 วัน</strong> หากครบกำหนดแล้วจำเป็นต้องใช้งานต่อ สามารถแจ้งต่ออายุผ่าน LINE ได้อีก 1 ครั้ง
+        </p>
+</div>
+<!-- Purpose / Medical Symptoms -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface" for="purpose">
+          วัตถุประสงค์ / สภาพอาการของผู้ป่วย <span class="text-error">*</span>
+</label>
+<div class="relative">
+<textarea class="w-full p-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md shadow-inner focus:outline-none focus:bg-surface-container-lowest transition-colors resize-none" id="purpose" name="purpose" placeholder="ระบุอาการ เช่น ผู้สูงอายุพักฟื้นหลังผ่าตัดสะโพก ต้องใช้เดินทางไปตรวจตามนัดที่ รพ.ศูนย์" rows="3">ผู้สูงอายุ (อายุ 78 ปี) พักฟื้นหลังผ่าตัดข้อสะโพก ยังไม่สามารถลงน้ำหนักที่ขาข้างขวาได้ ต้องเดินทางไปตรวจติดตามอาการและทำกายภาพที่ รพ.ศูนย์ ทุก 2 สัปดาห์</textarea>
+</div>
+</div>
+</section>
+<!-- Section 3: เอกสารแนบประกอบคำขอ (File Upload UX) -->
+<section class="bg-surface-container-lowest rounded-xl p-card-padding shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">attach_file</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">3. เอกสารแนบประกอบคำขอ</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">2 รายการ</span>
+</div>
+<!-- Upload 1: Thai Citizen ID (Already Uploaded Preview) -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface">สำเนา/รูปถ่ายบัตรประชาชน <span class="text-error">*</span></span>
+<span class="font-label-sm text-label-sm text-status-available flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            อัปโหลดสำเร็จ
+          </span>
+</div>
+<div class="p-3 rounded-xl bg-surface-container-low flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-16 h-12 rounded-lg bg-surface overflow-hidden flex-shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Sample photo mock of official Thai National ID card with simulated blurred confidential sections, lying flat on clean desktop, well lit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlsB2E1sQ3LMAP75S9ldNiG100yocyRh6C8YcSqmdddDRTlaQdc9ZXHa8IRBCTC5YhBiJqnRpaGrwqziIwYMbAB8qpROu3AxoQdY87RmRTWuZNTyRQmysiyKQiPCMrL8cKIYHNFt8VwEjlgt8kwp4nfeGnGiNL5EDD4ssCMlZqN512mxeTQ9McsHsC7rUGEBazeMTMUZ5O0WKUNJkOgKlAxDGiBFBLBMnPd3L_CbjSNJ8XBub2uUDm"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">citizen_card_somchai.jpg</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">1.4 MB • ถ่ายเมื่อ 24 ก.ย.</span>
+</div>
+</div>
+<button aria-label="ลบรูปภาพ" class="w-9 h-9 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center hover:bg-badge-overdue-bg hover:text-status-overdue transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Upload 2: Medical Certificate / Appointment Card -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">ใบนัดแพทย์ หรือ ใบรับรองแพทย์</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(จำเป็นมากสำหรับ เตียงผู้ป่วย/ถังออกซิเจน)</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline bg-surface-container px-2 py-0.5 rounded">แนบเพิ่ม</span>
+</div>
+<!-- Interactive Drag/Click Upload Area -->
+<div class="p-space-md rounded-xl bg-surface-subtle flex flex-col items-center justify-center gap-2 text-center cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="w-12 h-12 rounded-full bg-mint-bg text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary">แตะเพื่อถ่ายภาพ หรือ เลือกรูปใบนัดแพทย์</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">รองรับไฟล์ JPG, PNG หรือ PDF (สูงสุด 10MB)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Terms & Community Care Commitment -->
+<div class="bg-mint-bg rounded-xl p-card-padding flex flex-col gap-space-sm">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<h4 class="font-label-lg text-label-lg">ระเบียบและข้อตกลงการยืม-คืน รพ.สต.</h4>
+</div>
+<ul class="flex flex-col gap-1.5 pl-5 list-disc font-body-sm text-body-sm text-on-surface-variant">
+<li>ใช้อุปกรณ์เพื่อการฟื้นฟูดูแลสุขภาพของผู้ป่วยตามที่ระบุในคำขอเท่านั้น</li>
+<li>ห้ามนำอุปกรณ์ไปดัดแปลง จำหน่าย หรือให้ผู้อื่นยืมต่อโดยไม่ได้รับอนุญาต</li>
+<li>หากอุปกรณ์ชำรุดเสียหาย หรือสิ้นสุดความจำเป็น กรุณาแจ้ง รพ.สต. ทันที</li>
+<li>เมื่อส่งคืน เจ้าหน้าที่จะทำการตรวจสภาพความพร้อมใช้และฆ่าเชื้ออุปกรณ์</li>
+</ul>
+<!-- Agreement Checkbox -->
+<label class="flex items-start gap-3 mt-1 pt-space-xs cursor-pointer select-none">
+<div class="relative flex items-center justify-center mt-0.5">
+<input checked="" class="peer sr-only" id="termsCheck" type="checkbox"/>
+<div class="w-5 h-5 rounded bg-surface-container-lowest peer-checked:bg-primary transition-all flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary scale-0 peer-checked:scale-100 transition-transform font-bold">check</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-on-surface leading-tight">
+          ข้าพเจ้ายินยอมปฏิบัติตามระเบียบการยืม-คืนอุปกรณ์ทางการแพทย์ของ รพ.สต. ทุกประการ
+        </span>
+</label>
+</div>
+<!-- Bottom Action Buttons -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<!-- LINE Style Affirmative Button -->
+<button class="w-full h-touch-target-min rounded-xl bg-[#06C755] text-white font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-md hover:opacity-95 active:scale-[0.99] transition-all" id="submitBtn" type="button">
+<span class="material-symbols-outlined text-[22px]">send</span>
+        ยืนยันการยื่นคำขอยืม
+      </button>
+<!-- Secondary Return Button -->
+<button class="w-full h-12 rounded-xl bg-surface-container text-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        ย้อนกลับไปคลังอุปกรณ์
+      </button>
+</div>
+</form>
+<!-- LINE Staff Direct Contact Floating Cue -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-badge-available-bg text-status-available flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">ต้องการความช่วยเหลือในการกรอก?</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ติดต่อ จนท. รพ.สต. ทางโทรศัพท์หรือแชท</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-sm text-label-sm flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+      044-123456
+    </button>
+</div>
+</div>
+<script>
+  // Simple interactive feedback for input masks & submission
+  (function() {
+    const phoneInput = document.getElementById('phone');
+    const citizenInput = document.getElementById('citizenId');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (phoneInput) {
+      phoneInput.addEventListener('input', function(e) {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 10) val = val.slice(0, 10);
+        if (val.length > 6) {
+          e.target.value = val.slice(0, 3) + '-' + val.slice(3, 6) + '-' + val.slice(6);
+        } else if (val.length > 3) {
+          e.target.value = val.slice(0, 3) + '-' + val.slice(3);
+        } else {
+          e.target.value = val;
+        }
+      });
+    }
+
+    if (citizenInput) {
+      citizenInput.addEventListener('input', function(e) {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 13) val = val.slice(0, 13);
+        let formatted = '';
+        if (val.length > 0) formatted += val.substring(0, 1);
+        if (val.length > 1) formatted += '-' + val.substring(1, 5);
+        if (val.length > 5) formatted += '-' + val.substring(5, 10);
+        if (val.length > 10) formatted += '-' + val.substring(10, 12);
+        if (val.length > 12) formatted += '-' + val.substring(12, 13);
+        e.target.value = formatted;
+      });
+    }
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', function() {
+        const terms = document.getElementById('termsCheck');
+        if (terms && !terms.checked) {
+          alert('กรุณาทำเครื่องหมายยินยอมปฏิบัติตามระเบียบการยืม-คืนอุปกรณ์');
+          return;
+        }
+        submitBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
+          กำลังส่งข้อมูลคำขอ...
+        `;
+        submitBtn.disabled = true;
+        setTimeout(() => {
+          submitBtn.innerHTML = `
+            <span class="material-symbols-outlined text-[22px]">check_circle</span>
+            ส่งคำขอสำเร็จ!
+          `;
+          submitBtn.classList.remove('bg-[#06C755]');
+          submitBtn.classList.add('bg-status-available');
+        }, 1200);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(15,23,42,0.06)]" data-active-classes="text-primary font-label-md"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-on-surface-variant hover:text-primary transition-all" data-path="catalog" href="#"><span class="material-symbols-outlined text-[24px]">medical_services</span><span class="font-label-md text-label-md mt-0.5">คลังอุปกรณ์</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] transition-all text-primary font-label-md" data-path="borrow-request" href="#"><span class="material-symbols-outlined text-[24px]">post_add</span><span class="font-label-md text-label-md mt-0.5">ยื่นคำขอยืม</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-on-surface-variant hover:text-primary transition-all" data-path="my-loans" href="#"><span class="material-symbols-outlined text-[24px]">assignment</span><span class="font-label-md text-label-md mt-0.5">รายการของฉัน</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-on-surface-variant hover:text-primary transition-all" data-path="staff-scanner" href="#"><span class="material-symbols-outlined text-[24px]">qr_code_scanner</span><span class="font-label-md text-label-md mt-0.5">เจ้าหน้าที่</span></a></div></nav></body></html>

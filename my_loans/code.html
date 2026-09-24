@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="th"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-container": "#f5fff7", "on-tertiary-fixed-variant": "#004b73", "status-borrowed": "#0284C7", "badge-maintenance-bg": "#F1F5F9", "status-available": "#059669", "tertiary-fixed-dim": "#93ccff", "badge-overdue-bg": "#FEE2E2", "on-error": "#ffffff", "surface-dim": "#ccdbf3", "outline-variant": "#bccac0", "surface-container-highest": "#d5e3fc", "tertiary-container": "#007bb9", "inverse-on-surface": "#eaf1ff", "on-secondary": "#ffffff", "mint-bg": "#F0FDF4", "on-background": "#0d1c2e", "primary-fixed-dim": "#68dba9", "secondary-container": "#5efd83", "on-surface-variant": "#3d4a42", "primary-container": "#00855d", "on-secondary-container": "#00722d", "on-secondary-fixed-variant": "#00531f", "on-primary-fixed": "#002114", "badge-pending-bg": "#FEF3C7", "status-overdue": "#DC2626", "on-tertiary": "#ffffff", "surface-variant": "#d5e3fc", "surface-tint": "#006c4a", "outline": "#6d7a72", "surface-container-lowest": "#ffffff", "surface-bright": "#f8f9ff", "on-tertiary-fixed": "#001d31", "inverse-surface": "#233144", "status-maintenance": "#64748B", "on-secondary-fixed": "#002108", "secondary-fixed-dim": "#3ee26c", "surface-container-low": "#eff4ff", "primary-fixed": "#85f8c4", "primary": "#006948", "surface": "#f8f9ff", "badge-borrowed-bg": "#E0F2FE", "on-error-container": "#93000a", "tertiary-fixed": "#cce5ff", "surface-subtle": "#F8FAFC", "error": "#ba1a1a", "badge-available-bg": "#DCFCE7", "on-surface": "#0d1c2e", "on-primary": "#ffffff", "surface-container": "#e6eeff", "secondary-fixed": "#69ff89", "error-container": "#ffdad6", "on-tertiary-container": "#fdfcff", "status-pending": "#D97706", "tertiary": "#006194", "inverse-primary": "#68dba9", "on-primary-fixed-variant": "#005137", "surface-container-high": "#dce9ff", "background": "#f8f9ff", "secondary": "#006e2b" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-2xl": "2rem", "space-xl": "1.5rem", "screen-gutter": "1rem", "space-3xl": "2.5rem", "space-sm": "0.75rem", "space-xs": "0.5rem", "bottom-nav-height": "4.25rem", "space-md": "1rem", "space-lg": "1.25rem", "card-padding": "1rem", "space-2xs": "0.25rem", "touch-target-min": "3rem" }, fontFamily: { "headline-lg": ["plusJakartaSans"], "body-md": ["plusJakartaSans"], "label-lg": ["plusJakartaSans"], "body-lg": ["plusJakartaSans"], "label-md": ["plusJakartaSans"], "headline-md": ["plusJakartaSans"], "body-sm": ["plusJakartaSans"], "label-sm": ["plusJakartaSans"], "headline-sm": ["plusJakartaSans"], "headline-xl": ["plusJakartaSans"] }, fontSize: { "headline-lg": ["22px", { "lineHeight": "30px", "fontWeight": "700" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "600" }], "headline-md": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "16px", "fontWeight": "700" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-xl": ["28px", { "lineHeight": "36px", "fontWeight": "700" }] } } } }</script></head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-screen-gutter flex items-center justify-between"><div class="flex items-center gap-space-xs"><img alt="รพ.สต. ยืม-คืนกายอุปกรณ์ Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AOf_eGf_R2d8MfqV3W93pZt7W9Y5qC6d_Q2e7l3h4_1h=s120"/><div class="flex flex-col"><div class="flex items-center gap-space-2xs"><span class="font-label-lg text-label-lg text-primary leading-none">รพ.สต.</span><span class="px-space-2xs py-0.5 rounded-full bg-badge-available-bg text-status-available font-label-sm text-label-sm leading-none">ยืม-คืนกายอุปกรณ์</span></div><span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">My Loans</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="แชร์" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">share</span></button><button aria-label="ปิด" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">close</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ml-space-2xs" src="https://lh3.googleusercontent.com/aida/AOf_eGf7W_s5T2fQ3H4l8m2G9c_E7a1p0X_qZ4v6B2w=s120"/></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface"><div class="flex flex-col w-full px-screen-gutter pb-space-2xl space-y-space-md">
+<!-- User Profile Header Summary Card -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-space-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md shadow-inner">
+            ส
+          </div>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-status-available rounded-full ring-2 ring-surface"></span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center space-x-space-xs">
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">นายสมชาย ใจดี</h2>
+<span class="px-space-2xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">ผู้ยืม</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">HN: 67-08921 • 089-456-7890</p>
+</div>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="inline-block px-space-xs py-1 rounded-full bg-mint-bg text-status-available font-label-sm text-label-sm">
+          สถานะปกติ
+        </span>
+</div>
+</div>
+</div>
+<!-- Tab Switcher -->
+<div class="w-full bg-surface-container rounded-xl p-space-2xs flex shadow-sm" role="tablist">
+<button class="flex-1 py-2 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-primary shadow-sm flex items-center justify-center space-x-space-2xs transition-all duration-200" id="tab-active-btn" onclick="switchTab('active')" type="button">
+<span class="material-symbols-outlined text-[18px]">timelapse</span>
+<span>กำลังยืมอยู่ (Active)</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">2</span>
+</button>
+<button class="flex-1 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface flex items-center justify-center space-x-space-2xs transition-all duration-200" id="tab-history-btn" onclick="switchTab('history')" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span>ประวัติย้อนหลัง (History)</span>
+</button>
+</div>
+<!-- ACTIVE CONTENT SECTION -->
+<div class="flex flex-col space-y-space-md w-full" id="section-active">
+<!-- Active Loan Card (Highlight) -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col space-y-space-sm relative overflow-hidden">
+<!-- Top Subtle Gradient Glow -->
+<div class="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-primary/5 pointer-events-none"></div>
+<!-- Card Top: Equipment Info & Status -->
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex space-x-space-sm min-w-0">
+<img class="w-16 h-16 rounded-lg object-cover bg-surface-container flex-shrink-0" data-alt="A clean, lightweight medical foldable standard transport wheelchair with padded black vinyl seat and ergonomic armrests against a pristine bright clinical hospital studio backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSzKKrQZ8Xl58evqedzbeF9ePfO4S2oV9yjtQRxiqPabnC5iVcfwaiDqaZVdEWcJzAZk5IxpdLLqeMLpqkF7el_YX1-B5dXZ35x1-RBLmwcu_mnIyoQ6g2mMIjC8L5t7bv5cPPD0UNIRCnbYhwiyFzBq7fEKPeGFFAQlJ3nxzYKHgzSC3JyDMlyIcr_rOrUuGGBrknbG8LcWBFecd-cYfRbLL1wwp2AT0qPUgx5iRJQ5fxovJjRTV-"/>
+<div class="flex flex-col min-w-0 justify-center">
+<div class="flex items-center space-x-space-2xs">
+<span class="px-space-2xs py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">EQ-WC-001</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate mt-0.5">รถเข็นผู้ป่วย พับได้ (Wheelchair)</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ประจำจุด: คลังกายอุปกรณ์ รพ.สต.</span>
+</div>
+</div>
+<span class="px-space-xs py-1 rounded-full bg-badge-available-bg text-status-available font-label-sm text-label-sm whitespace-nowrap flex items-center space-x-1 flex-shrink-0">
+<span class="w-1.5 h-1.5 rounded-full bg-status-available animate-ping mr-1"></span>
+          กำลังใช้งาน
+        </span>
+</div>
+<!-- Loan Period & Countdown Progress Ring / Bar -->
+<div class="w-full bg-mint-bg rounded-lg p-space-sm space-y-space-xs">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<div class="flex items-center space-x-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>ยืม: 20 ส.ค. 2569</span>
+</div>
+<div class="flex items-center space-x-1 text-on-surface-variant">
+<span>ครบกำหนด: 20 ก.ย. 2569</span>
+</div>
+</div>
+<!-- Progress Track -->
+<div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 83%;"></div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-body-sm text-body-sm">ระยะเวลายืม 31 วัน</span>
+<span class="font-label-md text-label-md text-status-pending flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">timer</span>
+<span>เหลือเวลาอีก 5 วัน</span>
+</span>
+</div>
+</div>
+<!-- LINE OA Notification Alert Banner -->
+<div class="flex items-center space-x-space-xs px-space-sm py-2 rounded-lg bg-badge-available-bg/60 text-primary">
+<span class="material-symbols-outlined text-[18px] flex-shrink-0">chat_bubble</span>
+<p class="font-body-sm text-body-sm leading-snug">ระบบส่งข้อความแจ้งเตือนผ่าน LINE OA เรียบร้อยแล้ว</p>
+</div>
+<!-- Action Buttons Row -->
+<div class="grid grid-cols-2 gap-space-xs pt-space-2xs">
+<button class="w-full h-12 bg-surface-container hover:bg-surface-container-high text-on-surface rounded-lg font-label-md text-label-md flex items-center justify-center space-x-space-2xs transition-colors" onclick="openExtendModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">update</span>
+<span>ขอขยายเวลา</span>
+</button>
+<button class="w-full h-12 bg-primary hover:bg-primary-container text-on-primary rounded-lg font-label-md text-label-md flex items-center justify-center space-x-space-2xs shadow-sm transition-colors" onclick="openReturnModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+<span>แจ้งเตรียมส่งคืน</span>
+</button>
+</div>
+<!-- QR Code Quick Access Button for Return -->
+<button class="w-full py-2.5 rounded-lg bg-surface-subtle hover:bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center justify-center space-x-space-xs transition-colors" onclick="showReturnQR()" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary">qr_code_2</span>
+<span>แสดง QR Code สำหรับให้ จนท. สแกนรับคืน</span>
+</button>
+</div>
+<!-- Pending Request Section Header -->
+<div class="flex items-center justify-between pt-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center space-x-space-2xs">
+<span class="material-symbols-outlined text-[20px] text-status-pending">pending_actions</span>
+<span>คำขอที่รอการพิจารณา (Pending)</span>
+</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">1 รายการ</span>
+</div>
+<!-- Pending Request Card -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col space-y-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex space-x-space-sm min-w-0">
+<img class="w-16 h-16 rounded-lg object-cover bg-surface-container flex-shrink-0" data-alt="A hospital-grade 3-crank manual adjustable patient care bed with side safety rails and clean mattress in bright warm sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAywVl8M4Y4Ed1cOklrZQ5X8b2YqkcvdtbggFKgphxTSmDFvz1MUgqVaX3BNzEUZJrs4eAoogzqB7tfDJvVociAzjF97APXQXJ4T1caj8iT0FoAbiQy0fWQ3igYtOjFP4UMBPKdYphuA1ZnT7KpGVomCu_4-_Z_onrGxCtrd5bIdQF3JOzWsvG3Eg9gkuFTkCf-Wm3cAlC8ltcU4GzS5O4zpmU2TZHkJ6Wl19Dv-6_JLrLvK6xnFRwm"/>
+<div class="flex flex-col min-w-0 justify-center">
+<div class="flex items-center space-x-space-2xs">
+<span class="px-space-2xs py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">EQ-BD-001</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate mt-0.5">เตียงผู้ป่วย 3 ไกร์ มือหมุน</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ยื่นเมื่อ 2 ก.ย. 2569</span>
+</div>
+</div>
+<span class="px-space-xs py-1 rounded-full bg-badge-pending-bg text-status-pending font-label-sm text-label-sm whitespace-nowrap flex items-center space-x-1 flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]">hourglass_top</span>
+<span>รอเจ้าหน้าที่อนุมัติ</span>
+</span>
+</div>
+<!-- Queue & Details info box -->
+<div class="w-full bg-surface-subtle rounded-lg p-space-sm flex items-center justify-between">
+<div class="flex items-center space-x-space-xs">
+<div class="w-8 h-8 rounded-full bg-badge-pending-bg text-status-pending flex items-center justify-center font-headline-sm text-headline-sm">
+            1
+          </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">อยู่ในลำดับคิวที่ 1</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">อุปกรณ์พร้อมส่งมอบหลังตรวจสภาพ</span>
+</div>
+</div>
+<button class="px-space-xs py-1 rounded-lg bg-badge-overdue-bg text-status-overdue font-label-sm text-label-sm hover:opacity-90" onclick="cancelRequestAlert()" type="button">
+          ยกเลิกคำขอ
+        </button>
+</div>
+</div>
+</div>
+<!-- HISTORY CONTENT SECTION (Hidden by default) -->
+<div class="hidden flex-col space-y-space-sm w-full" id="section-history">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">ประวัติการส่งคืนอุปกรณ์</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">ทั้งหมด 1 รายการ</span>
+</div>
+<!-- History Card 1 -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col space-y-space-sm">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex space-x-space-sm min-w-0">
+<img class="w-16 h-16 rounded-lg object-cover bg-surface-container flex-shrink-0" data-alt="A durable adjustable four-legged aluminum walking cane with anti-slip rubber tips positioned in an organized warm physiotherapy room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaEtNWLIR9UXhA7OQEUyLZKB1BtTdvCNDf7wRdpYvPS4E9pihH846DSzTNynr2wCuixLh5zcfULDtjIOLk5bWg5DsqeFyy0HoCb2NCbFxnWtdV28TDtECY9LZWBGmwnPvuSIxsAlEU97pzdpeWPcTc2sJ4GfwqxktRTEd6pEZmtPg4y7w3vVibapkoore3ilBrrLoKeFjlfKmyr6Io6-a61e-I79Xv-KnwuWwFujE-g4XKFOjyCs9P"/>
+<div class="flex flex-col min-w-0 justify-center">
+<div class="flex items-center space-x-space-2xs">
+<span class="px-space-2xs py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">EQ-ST-001</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate mt-0.5">ไม้เท้า 4 ขา ปรับระดับได้</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ระยะเวลา: 15 ก.ค. - 14 ส.ค. 2569</span>
+</div>
+</div>
+<span class="px-space-xs py-1 rounded-full bg-badge-borrowed-bg text-status-borrowed font-label-sm text-label-sm whitespace-nowrap flex items-center space-x-1 flex-shrink-0">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span>คืนเรียบร้อย</span>
+</span>
+</div>
+<!-- Return Details Box -->
+<div class="w-full bg-surface-subtle rounded-lg p-space-sm space-y-1">
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>วันที่ส่งคืนสำเร็จ:</span>
+<span class="font-label-md text-label-md text-on-surface">14 ส.ค. 2569 (ตรงเวลา)</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>เจ้าหน้าที่ผู้รับคืน:</span>
+<span class="font-label-md text-label-md text-on-surface flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px] text-primary">badge</span>
+<span>จนท.สมศรี พยาบาลวิชาชีพ</span>
+</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>สภาพอุปกรณ์:</span>
+<span class="font-label-sm text-label-sm text-status-available">สมบูรณ์ สะอาดพร้อมใช้งานต่อ</span>
+</div>
+</div>
+<button class="w-full py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center justify-center space-x-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>ดูใบยืนยันการคืนอุปกรณ์</span>
+</button>
+</div>
+<!-- Empty/End-of-history indicator -->
+<div class="p-space-md text-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[28px] text-outline-variant">inventory_2</span>
+<p class="font-body-sm text-body-sm mt-1">แสดงประวัติย้อนหลังเฉพาะ 12 เดือนล่าสุด</p>
+</div>
+</div>
+<!-- Floating Help / Contact รพ.สต. Banner -->
+<div class="w-full bg-surface-container-highest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center space-x-space-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">support_agent</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface">ต้องการความช่วยเหลือการคืนอุปกรณ์?</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">โทร 044-123-456 รพ.สต. บ้านดอน</span>
+</div>
+</div>
+<a aria-label="โทรออกหารพ.สต." class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center flex-shrink-0 shadow-sm hover:bg-primary-container transition-colors" href="tel:044123456">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</a>
+</div>
+<!-- Quick LINE Contact Support CTA -->
+<div class="w-full bg-[#06C755]/10 rounded-xl p-space-sm flex items-center justify-between">
+<div class="flex items-center space-x-space-xs min-w-0">
+<span class="material-symbols-outlined text-[#06C755] text-[20px]">mark_chat_unread</span>
+<span class="font-label-md text-label-md text-on-surface truncate">สอบถามเจ้าหน้าที่ผ่าน LINE แชท</span>
+</div>
+<button class="px-space-sm py-1.5 rounded-lg bg-[#06C755] text-white font-label-md text-label-md whitespace-nowrap shadow-sm hover:opacity-90" type="button">
+      เปิดแชท LINE
+    </button>
+</div>
+<!-- QR Code Modal (Hidden by Default) -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-screen-gutter bg-inverse-surface/60 backdrop-blur-sm" id="qr-modal">
+<div class="bg-surface-container-lowest rounded-2xl p-space-lg w-full max-w-sm flex flex-col items-center text-center space-y-space-md shadow-2xl relative">
+<button aria-label="ปิดหน้าต่าง" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high" onclick="closeReturnQR()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<div class="w-12 h-12 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">qr_code_2</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">QR Code ส่งคืนอุปกรณ์</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">แสดงรหัสนี้ให้เจ้าหน้าที่ รพ.สต. หรือ อสม. สแกนรับคืน</p>
+</div>
+<!-- QR Code Visual Display Card -->
+<div class="p-4 bg-white rounded-xl shadow-inner flex flex-col items-center justify-center space-y-2">
+<div class="w-48 h-48 bg-surface-container-lowest flex items-center justify-center relative">
+<!-- Stylized Inline SVG QR Placeholder for crisp clinical rendering -->
+<svg class="w-44 h-44" fill="currentColor" viewbox="0 0 100 100">
+<path clip-rule="evenodd" d="M10 10h30v30H10V10zm5 5h20v20H15V15zm5 5h10v10H20V20zm40-10h30v30H60V10zm5 5h20v20H65V15zm5 5h10v10H70V20zM10 60h30v30H10V60zm5 5h20v20H15V65zm5 5h10v10H20V70zm45-10h5v10h-5v-10zm10 0h15v5H75v-5zm-15 15h10v5H60v-5zm15 0h10v15H75V75zm-15 10h5v10h-5V85zm25 0h5v10h-5V85z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="font-label-md text-label-md text-primary tracking-wider">EQ-WC-001-RET</span>
+</div>
+<div class="w-full bg-surface-subtle p-space-xs rounded-lg text-left">
+<div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant">
+<span>ผู้ส่งคืน:</span>
+<span class="font-label-sm text-label-sm text-on-surface">นายสมชาย ใจดี</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mt-1">
+<span>รายการ:</span>
+<span class="font-label-sm text-label-sm text-on-surface">รถเข็นผู้ป่วย EQ-WC-001</span>
+</div>
+</div>
+<button class="w-full h-12 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-sm" onclick="closeReturnQR()" type="button">
+        เสร็จสิ้น
+      </button>
+</div>
+</div>
+<!-- Interactive Scripts -->
+<script>
+    function switchTab(tab) {
+      const activeSection = document.getElementById('section-active');
+      const historySection = document.getElementById('section-history');
+      const activeBtn = document.getElementById('tab-active-btn');
+      const historyBtn = document.getElementById('tab-history-btn');
+
+      if (tab === 'active') {
+        activeSection.classList.remove('hidden');
+        historySection.classList.add('hidden');
+        
+        activeBtn.className = 'flex-1 py-2 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-primary shadow-sm flex items-center justify-center space-x-space-2xs transition-all duration-200';
+        historyBtn.className = 'flex-1 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface flex items-center justify-center space-x-space-2xs transition-all duration-200';
+      } else {
+        activeSection.classList.add('hidden');
+        historySection.classList.remove('hidden');
+
+        historyBtn.className = 'flex-1 py-2 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-primary shadow-sm flex items-center justify-center space-x-space-2xs transition-all duration-200';
+        activeBtn.className = 'flex-1 py-2 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface flex items-center justify-center space-x-space-2xs transition-all duration-200';
+      }
+    }
+
+    function showReturnQR() {
+      document.getElementById('qr-modal').classList.remove('hidden');
+    }
+
+    function closeReturnQR() {
+      document.getElementById('qr-modal').classList.add('hidden');
+    }
+
+    function openExtendModal() {
+      alert('ส่งคำขอขยายเวลายืม 15 วันไปยังเจ้าหน้าที่ รพ.สต. บ้านดอน เรียบร้อยแล้ว');
+    }
+
+    function openReturnModal() {
+      alert('บันทึกการแจ้งเตรียมส่งคืนแล้ว กรุณานำส่งที่ รพ.สต. หรือติดต่อ อสม. ประจำหมู่บ้าน');
+    }
+
+    function cancelRequestAlert() {
+      if (confirm('คุณต้องการยกเลิกคำขอยืม เตียงผู้ป่วย 3 ไกร์ ใช่หรือไม่?')) {
+        alert('ยกเลิกคำขอเรียบร้อยแล้ว');
+      }
+    }
+  </script>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(15,23,42,0.06)]" data-active-classes="text-primary font-label-md"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-on-surface-variant hover:text-primary transition-all" data-path="catalog" href="#"><span class="material-symbols-outlined text-[24px]">medical_services</span><span class="font-label-md text-label-md mt-0.5">คลังอุปกรณ์</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-on-surface-variant hover:text-primary transition-all" data-path="borrow-request" href="#"><span class="material-symbols-outlined text-[24px]">post_add</span><span class="font-label-md text-label-md mt-0.5">ยื่นคำขอยืม</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] transition-all text-primary font-label-md" data-path="my-loans" href="#"><span class="material-symbols-outlined text-[24px]">assignment</span><span class="font-label-md text-label-md mt-0.5">รายการของฉัน</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] text-on-surface-variant hover:text-primary transition-all" data-path="staff-scanner" href="#"><span class="material-symbols-outlined text-[24px]">qr_code_scanner</span><span class="font-label-md text-label-md mt-0.5">เจ้าหน้าที่</span></a></div></nav></body></html>
