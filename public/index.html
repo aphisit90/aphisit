@@ -10,7 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-
+<!-- LINE LIFF SDK -->
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script id="tailwind-config">
@@ -400,7 +401,7 @@
 
       <!-- 4 Quick Stats Grid -->
       <div class="grid grid-cols-2 gap-2.5">
-        <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
+       <div onclick="filterEquipmentStatus('pending')" class="cursor-pointer hover:bg-amber-50/50 transition bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div class="flex items-center justify-between text-xs text-slate-500">
             <span>รออนุมัติ</span>
             <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
@@ -413,7 +414,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div onclick="filterEquipmentStatus('borrowed')" class="cursor-pointer hover:bg-emerald-50/50 transition bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div class="flex items-center justify-between text-xs text-slate-500">
             <span>กำลังยืม</span>
             <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
@@ -426,13 +427,13 @@
           </div>
         </div>
 
-        <div class="bg-red-50 rounded-xl p-3 border border-red-200 shadow-sm flex flex-col justify-between">
+        <div onclick="filterEquipmentStatus('overdue')" class="cursor-pointer hover:bg-rose-100/50 transition bg-red-50 rounded-xl p-3 border border-red-200 shadow-sm flex flex-col justify-between">
           <div class="flex items-center justify-between text-xs text-red-700 font-semibold">
             <span>เกินกำหนด (ด่วน)</span>
             <span class="w-6 h-6 rounded-full bg-red-100 text-red-700 flex items-center justify-center">
               <span class="material-symbols-outlined text-[15px]">warning</span>
             </span>
-          </div>
+          <div onclick="filterEquipmentStatus('available')" class="cursor-pointer hover:bg-sky-50/50 transition bg-white rounded-xl p-3 border border-slate-200 shadow-sm flex flex-col justify-between"></div>
           <div class="flex items-baseline gap-1 mt-2">
             <span class="text-2xl font-bold text-red-600" id="statOverdue">0</span>
             <span class="text-xs text-red-600">ชิ้น</span>
@@ -850,13 +851,14 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          equipment_id: equipmentId,
-          borrow_date: borrowDate,
-          due_date: dueDate,
-          remarks: remarks,
-          full_name: fullName,
-          phone_number: phone
-        })
+    user_id: (window.currentUser && window.currentUser.user_id) ? window.currentUser.user_id : 1,
+    equipment_id: equipmentId,
+    borrow_date: borrowDate,
+    due_date: dueDate,
+    remarks: remarks,
+    full_name: fullName,
+    phone_number: phone
+})
       });
 
       const data = await res.json();
@@ -1217,5 +1219,50 @@
   }
 </script>
 
+<!-- LINE LIFF Initialization -->
+  <script>
+  async function initLineLiff() {
+    try {
+      await liff.init({ liffId: "2011707327-nhtPmhVu" });
+      if (liff.isLoggedIn()) {
+        const profile = await liff.getProfile();
+        console.log("LINE Profile loaded:", profile);
+
+        // ส่ง LINE User ID ไปเช็กหรือบันทึกใน MySQL ผ่าน API
+        const res = await fetch('/api/auth/line', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            line_user_id: profile.userId,
+            display_name: profile.displayName
+          })
+        });
+        const data = await res.json();
+        
+        if (data.success && data.user) {
+          console.log("เข้าสู่ระบบด้วยบัญชีผู้ใช้:", data.user);
+          window.currentUser = data.user;
+          // เรียกใช้ฟังก์ชัน switchPersona เพื่อให้ระบบอัปเดตผู้ใช้ปัจจุบันทั่วทั้งหน้าเว็บทันที
+          if (typeof switchPersona === 'function') {
+            await switchPersona(data.user.user_id);
+          }
+        }
+      } else {
+        liff.login();
+      }
+    } catch (error) {
+      console.error("LIFF Init Error:", error);
+    }
+  }
+
+  // ฟังก์ชันรองรับการคลิกกล่องสถิติ
+  function filterEquipmentStatus(status) {
+    console.log("เลือกกรองสถานะ:", status);
+    alert("เลือกกรองสถานะ: " + status);
+  }
+
+  // เรียกทำงานทันทีเมื่อหน้าเว็บโหลดเสร็จ
+  window.addEventListener('DOMContentLoaded', initLineLiff);
+</script>
 </body>
 </html>
