@@ -56,37 +56,6 @@ app.use((err, req, res, next) => {
 });
 
 if (require.main === module) {
-  // API สำหรับยืนยันตัวตน LINE และตรวจสอบ/บันทึกผู้ใช้งาน
-app.post('/api/auth/line', async (req, res) => {
-  const { line_user_id, display_name } = req.body;
-
-  if (!line_user_id) {
-    return res.status(400).json({ success: false, message: 'กรุณาระบุ line_user_id' });
-  }
-
-  try {
-    // 1. ตรวจสอบว่ามี line_user_id นี้ในตาราง users หรือยัง
-    const [rows] = await db.query('SELECT * FROM users WHERE line_user_id = ?', [line_user_id]);
-
-    if (rows.length > 0) {
-      // มีผู้ใช้อยู่แล้ว ส่งข้อมูลผู้ใช้กลับไป
-      return res.json({ success: true, user: rows[0] });
-    } else {
-      // ยังไม่มี ให้สร้างผู้ใช้ใหม่โดยใช้ชื่อจาก LINE
-      const [result] = await db.query(
-        'INSERT INTO users (full_name, line_user_id, role) VALUES (?, ?, "patient")',
-        [display_name || 'ผู้ใช้งาน LINE', line_user_id]
-      );
-
-      // ดึงข้อมูลผู้ใช้ที่เพิ่งสร้าง
-      const [newUser] = await db.query('SELECT * FROM users WHERE user_id = ?', [result.insertId]);
-      return res.json({ success: true, user: newUser[0] });
-    }
-  } catch (error) {
-    console.error('Line Auth Error:', error);
-    res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการยืนยันตัวตน' });
-  }
-});
   app.listen(PORT, () => {
     console.log(`====================================================`);
     console.log(` CareBridge LIFF Server running at: http://localhost:${PORT}`);

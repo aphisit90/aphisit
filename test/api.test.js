@@ -50,17 +50,53 @@ async function runTests() {
       assert(filterBody.data.every(e => e.category === 'รถเข็น'));
     });
 
-    // --- TEST 2: PDPA Masking & User Profile ---
-    await test('2. GET /api/auth/me - ตรวจสอบการปกป้องข้อมูลตามมาตรฐาน PDPA (Masking เลขบัตรประชาชน)', async () => {
-      // Default user is patient (user_id: 3)
-      const res = await fetch(`${BASE_URL}/auth/me`);
-      const body = await res.json();
-      assert.strictEqual(res.status, 200);
-      assert.strictEqual(body.success, true);
-      assert.strictEqual(body.data.role, 'patient');
-      
-      // Check masked national ID e.g. 3-5001-XXXXX-XX-9
-      const maskedId = body.data.national_id;
+    // --- TEST 2: Unauthenticated State & Auth Guard ---
+    await test('2. Auth Gate - ตรวจสอบสถานะก่อน Login และการป้องกันการยืมเมื่อยังไม่ได้ล็อกอิน', async () => {
+      // 2.1 GET /api/auth/me returns authenticated: false
+      const meRes = await fetch(`${BASE_URL}/auth/me`);
+      const meBody = await meRes.json();
+      assert.strictEqual(meRes.status, 200);
+      assert.strictEqual(meBody.authenticated, false);
+      assert.strictEqual(meBody.data, null);
+
+      // 2.2 Attempt to borrow without login returns 401
+      const borrowRes = await fetch(`${BASE_URL}/borrow/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ equipment_id: 2, borrow_date: '2026-09-05', due_date: '2026-10-05' })
+      });
+      assert.strictEqual(borrowRes.status, 401);
+    });
+
+    // --- TEST 3: Login Authentication Flow & PDPA Masking ---
+    await test('3. POST /api/auth/login - เข้าสู่ระบบด้วยข้อมูลประจำตัว (เบอร์โทร/User ID) และ PDPA Masking', async () => {
+      // 3.1 Invalid login credentials
+      const invalidRes = await fetch(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: '0999999999' })
+      });
+      assert.strictEqual(invalidRes.status, 401);
+
+      // 3.2 Valid login using phone number (0861112223 - นายสมชาย)
+      const validRes = await fetch(`${BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: '0861112223' })
+      });
+      const validBody = await validRes.json();
+      assert.strictEqual(validRes.status, 200);
+      assert.strictEqual(validBody.success, true);
+      assert.strictEqual(validBody.authenticated, true);
+      assert.strictEqual(validBody.data.user_id, 3);
+      assert.strictEqual(validBody.data.role, 'patient');
+
+      // 3.3 Verify /api/auth/me is now authenticated and respects PDPA
+      const meRes = await fetch(`${BASE_URL}/auth/me`);
+      const meBody = await meRes.json();
+      assert.strictEqual(meBody.authenticated, true);
+      assert.strictEqual(meBody.data.user_id, 3);
+      const maskedId = meBody.data.national_id;
       assert(maskedId.includes('XXXXX'), `เลขบัตรประชาชนต้องถูก Mask แต่ได้ค่า: ${maskedId}`);
       assert.strictEqual(maskedId.length, 17);
     });
@@ -188,6 +224,140 @@ async function runTests() {
       assert.strictEqual(body.success, true);
       assert(typeof body.isWithinStandardWindow === 'boolean');
       assert(Array.isArray(body.notifications));
+    });
+
+    // --- TEST 10: Member Registration ---
+    const testLineId = `U_TEST_PATIENT_${Date.now()}`;
+    const testNationalId = '12' + Math.floor(10000000000 + Math.random() * 90000000000);
+    let newUserId;
+
+    await test('10. POST /api/auth/register - สมัครสมาชิกผู้ยืมใหม่ บันทึกลงตาราง users และตรวจจับข้อมูลซ้ำ', async () => {
+      const regRes = await fetch(`${BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          line_user_id: testLineId,
+          national_id: testNationalId,
+          full_name: 'นายทดสอบ สมัครใหม่',
+          phone_number: '0899998888',
+          address: '99 หมู่ 9 ต.ทดสอบ อ.เมือง'
+        })
+      });
+      const regBody = await regRes.json();
+      assert.strictEqual(regRes.status, 201);
+      assert.strictEqual(regBody.success, true);
+      assert.strictEqual(regBody.data.full_name, 'นายทดสอบ สมัครใหม่');
+      assert.strictEqual(regBody.data.role, 'patient');
+      newUserId = regBody.data.user_id;
+
+      // Duplicate test
+      const dupRes = await fetch(`${BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          line_user_id: testLineId,
+          national_id: testNationalId,
+          full_name: 'คนซ้ำ',
+          phone_number: '0800000000'
+        })
+      });
+      assert.strictEqual(dupRes.status, 400);
+    });
+
+    // --- TEST 11: Borrower Isolation (Strict My-Loans Filtering) ---
+    await test('11. GET /api/borrow/my-loans - ผู้ยืมใหม่ต้องเห็นเฉพาะรายการของตนเองเท่านั้น (ยังไม่มีประวัติของคนอื่น)', async () => {
+      // Active user was automatically switched to newUserId
+      const loansRes = await fetch(`${BASE_URL}/borrow/my-loans`);
+      const loansBody = await loansRes.json();
+      assert.strictEqual(loansRes.status, 200);
+      assert.strictEqual(loansBody.success, true);
+      assert.strictEqual(loansBody.data.user.user_id, newUserId);
+      assert.strictEqual(loansBody.data.totalActive, 0, 'ผู้ใช้ใหม่ต้องยังไม่มีรายการยืมของตนเอง');
+      assert.strictEqual(loansBody.data.totalHistory, 0, 'ผู้ใช้ใหม่ต้องไม่เห็นประวัติของผู้อื่น');
+    });
+
+    // --- TEST 12: Request & Rejection Status Tracking ---
+    await test('12. Borrow Flow & Rejection - ยื่นขอยืม และตรวจสอบสถานะไม่อนุมัติ (rejected) พร้อมเหตุผล', async () => {
+      // Find currently available equipment
+      const availRes = await fetch(`${BASE_URL}/equipment?status=available`);
+      const availBody = await availRes.json();
+      assert(availBody.data.length > 0, 'ต้องมีอุปกรณ์ที่พร้อมยืม');
+      const targetEquipment = availBody.data[0];
+
+      // Submit loan request as new user
+      const reqRes = await fetch(`${BASE_URL}/borrow/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          equipment_id: targetEquipment.equipment_id,
+          borrow_date: '2026-10-10',
+          due_date: '2026-11-10',
+          remarks: 'ขอยืมเพื่อฟื้นฟูหลังข้อเท้าแพลง'
+        })
+      });
+      const reqBody = await reqRes.json();
+      assert.strictEqual(reqRes.status, 201, `Failed to submit borrow request: ${JSON.stringify(reqBody)}`);
+      const newRecordId = reqBody.data.record_id;
+
+      // Staff rejects the request with a reason
+      await fetch(`${BASE_URL}/auth/switch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 2 }) // Staff สมศรี
+      });
+
+      const rejectRes = await fetch(`${BASE_URL}/borrow/${newRecordId}/reject`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remarks: 'อุปกรณ์รุ่นนี้เหมาะสำหรับผู้สูงอายุ แนะนำให้แพทย์ประเมินซ้ำ' })
+      });
+      assert.strictEqual(rejectRes.status, 200);
+
+      // Switch back to new user and check status in my-loans
+      await fetch(`${BASE_URL}/auth/switch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: newUserId })
+      });
+
+      const checkRes = await fetch(`${BASE_URL}/borrow/my-loans`);
+      const checkBody = await checkRes.json();
+      assert.strictEqual(checkBody.success, true);
+      assert.strictEqual(checkBody.data.history.length, 1);
+      const rejectedLoan = checkBody.data.history[0];
+      assert.strictEqual(rejectedLoan.status, 'rejected');
+      assert(rejectedLoan.remarks.includes('แนะนำให้แพทย์ประเมินซ้ำ'));
+    });
+
+    // --- TEST 13: LINE LIFF Authentication ---
+    await test('13. POST /api/auth/line - เข้าสู่ระบบผ่าน LINE LIFF Profile สำเร็จและสร้างผู้ใช้งานอัตโนมัติหากยังไม่มี', async () => {
+      const lineRes = await fetch(`${BASE_URL}/auth/line`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          line_user_id: 'U9999_TEST_LINE_LOGIN',
+          display_name: 'คุณสายใจ ทดสอบไลน์'
+        })
+      });
+      const lineBody = await lineRes.json();
+      assert.strictEqual(lineRes.status, 200);
+      assert.strictEqual(lineBody.success, true);
+      assert.strictEqual(lineBody.authenticated, true);
+      assert.strictEqual(lineBody.user.line_user_id, 'U9999_TEST_LINE_LOGIN');
+    });
+
+    // --- TEST 14: Logout Flow ---
+    await test('14. POST /api/auth/logout - ออกจากระบบสำเร็จ ล้างเซสชัน และกลับสู่สถานะ unauthenticated', async () => {
+      const logoutRes = await fetch(`${BASE_URL}/auth/logout`, { method: 'POST' });
+      const logoutBody = await logoutRes.json();
+      assert.strictEqual(logoutRes.status, 200);
+      assert.strictEqual(logoutBody.success, true);
+      assert.strictEqual(logoutBody.authenticated, false);
+
+      const meRes = await fetch(`${BASE_URL}/auth/me`);
+      const meBody = await meRes.json();
+      assert.strictEqual(meBody.authenticated, false);
+      assert.strictEqual(meBody.data, null);
     });
 
     console.log(`\n🎉 การทดสอบเสร็จสมบูรณ์: ผ่านทั้งหมด ${passedCount}/${totalTests} การทดสอบ!`);

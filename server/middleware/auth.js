@@ -5,8 +5,8 @@
 
 const db = require('../db');
 
-// In-memory active user session (Default: นายสมชาย ใจดี [patient])
-let activeUserId = 3;
+// In-memory active user session (Default: null - require login)
+let activeUserId = null;
 
 /**
  * Mask Thai National ID to adhere to PDPA rules: 3-5001-XXXXX-XX-X
@@ -23,16 +23,12 @@ function maskNationalId(nationalId) {
  */
 async function attachUser(req, res, next) {
   try {
-    // In production, extract user from LINE LIFF JWT ID Token or Header
-    // In local dev/demo, use activeUserId or X-User-Id header
     const requestedUserId = req.headers['x-user-id'] || activeUserId;
-    const user = await db.getUserById(requestedUserId);
-
-    if (user) {
-      req.currentUser = user;
+    if (requestedUserId) {
+      const user = await db.getUserById(requestedUserId);
+      req.currentUser = user || null;
     } else {
-      // Fallback to first patient
-      req.currentUser = await db.getUserById(3);
+      req.currentUser = null;
     }
     next();
   } catch (err) {
@@ -49,7 +45,7 @@ function requireRole(allowedRoles) {
     if (!req.currentUser) {
       return res.status(401).json({
         success: false,
-        error: 'Unauthorized: โปรดยืนยันตัวตนผ่าน LINE LIFF ก่อนทำรายการ'
+        error: 'Unauthorized: กรุณาเข้าสู่ระบบก่อนทำรายการ'
       });
     }
 
@@ -65,10 +61,27 @@ function requireRole(allowedRoles) {
 }
 
 /**
+ * Require login middleware
+ */
+function requireAuth(req, res, next) {
+  if (!req.currentUser) {
+    return res.status(401).json({
+      success: false,
+      error: 'กรุณาเข้าสู่ระบบก่อนทำรายการ'
+    });
+  }
+  next();
+}
+
+/**
  * Switch active simulated user
  */
 function setActiveUserId(userId) {
-  activeUserId = Number(userId);
+  activeUserId = userId ? Number(userId) : null;
+}
+
+function clearActiveUser() {
+  activeUserId = null;
 }
 
 function getActiveUserId() {
@@ -79,6 +92,8 @@ module.exports = {
   maskNationalId,
   attachUser,
   requireRole,
+  requireAuth,
   setActiveUserId,
+  clearActiveUser,
   getActiveUserId
 };

@@ -112,22 +112,77 @@ class DatabaseService {
     return this.memUsers.find(u => u.line_user_id === lineUserId) || null;
   }
 
+  async getUserByNationalId(nationalId) {
+    if (!nationalId) return null;
+    const clean = nationalId.replace(/\D/g, '');
+    if (this.isMySQLConnected) {
+      try {
+        const [rows] = await this.pool.query('SELECT * FROM users WHERE national_id = ?', [clean]);
+        return rows[0] || null;
+      } catch (e) {
+        console.error('MySQL Error in getUserByNationalId:', e.message);
+      }
+    }
+    return this.memUsers.find(u => u.national_id === clean || u.national_id === nationalId) || null;
+  }
+
+  async findUserByIdentifier(identifier) {
+    if (!identifier) return null;
+    const trimmed = identifier.toString().trim();
+    const cleanNumbers = trimmed.replace(/\D/g, '');
+
+    if (this.isMySQLConnected) {
+      try {
+        const [rows] = await this.pool.query(
+          'SELECT * FROM users WHERE user_id = ? OR line_user_id = ? OR phone_number = ? OR national_id = ? LIMIT 1',
+          [Number(cleanNumbers) || 0, trimmed, trimmed, cleanNumbers]
+        );
+        return rows[0] || null;
+      } catch (e) {
+        console.error('MySQL Error in findUserByIdentifier:', e.message);
+      }
+    }
+
+    return this.memUsers.find(u => 
+      (Number(cleanNumbers) && u.user_id === Number(cleanNumbers)) ||
+      u.line_user_id.toLowerCase() === trimmed.toLowerCase() ||
+      (cleanNumbers && u.phone_number.replace(/\D/g, '') === cleanNumbers) ||
+      (cleanNumbers.length === 13 && u.national_id === cleanNumbers)
+    ) || null;
+  }
+
   async createUser(userData) {
+    const cleanNationalId = userData.national_id ? userData.national_id.replace(/\D/g, '') : null;
+    const phone = userData.phone_number || '-';
     if (this.isMySQLConnected) {
       try {
         const [result] = await this.pool.query(
           'INSERT INTO users (line_user_id, national_id, full_name, phone_number, address, role) VALUES (?, ?, ?, ?, ?, ?)',
-          [userData.line_user_id, userData.national_id || null, userData.full_name, userData.phone_number, userData.address || null, userData.role || 'patient']
+          [userData.line_user_id, cleanNationalId, userData.full_name, phone, userData.address || null, userData.role || 'patient']
         );
         return this.getUserById(result.insertId);
       } catch (e) {
         console.error('MySQL Error in createUser:', e.message);
+        throw e;
       }
     }
+
+    // Memory fallback checks
+    if (this.memUsers.some(u => u.line_user_id === userData.line_user_id)) {
+      const err = new Error(`LINE User ID "${userData.line_user_id}" มีในระบบแล้ว`);
+      err.code = 'ER_DUP_ENTRY';
+      throw err;
+    }
+    if (cleanNationalId && this.memUsers.some(u => u.national_id === cleanNationalId)) {
+      const err = new Error(`เลขประจำตัวประชาชน "${cleanNationalId}" มีในระบบแล้ว`);
+      err.code = 'ER_DUP_ENTRY';
+      throw err;
+    }
+
     const newUser = {
       user_id: this.nextUserId++,
       line_user_id: userData.line_user_id,
-      national_id: userData.national_id || null,
+      national_id: cleanNationalId,
       full_name: userData.full_name,
       phone_number: userData.phone_number,
       address: userData.address || null,
